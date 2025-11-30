@@ -31,7 +31,6 @@ export function CheckoutPage() {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<Address>();
 
   const selectedAddress = addressesData?.addresses.find(a => a.id === selectedAddressId);

@@ -142,7 +142,7 @@ export function ProductsManagement() {
     setUseUrlInput(false);
     reset({
       ...product,
-      isAvailable: product.isAvailable ? 'true' : 'false',
+      isAvailable: product.isAvailable,
       images: '' as any,
     });
     setIsFormOpen(true);
