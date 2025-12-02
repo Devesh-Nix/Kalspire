@@ -41,9 +41,11 @@ export function Footer() {
               Each piece is unique and tells its own story.
             </p>
             <div className="flex gap-3">
-              <Button variant="outline" size="icon" className="rounded-full hover:bg-primary hover:text-primary-foreground">
-                <Instagram className="h-4 w-4" />
-              </Button>
+              <a href="https://www.instagram.com/_kalspire_/" target="_blank" rel="noreferrer">
+                <Button variant="outline" size="icon" className="rounded-full hover:bg-primary hover:text-primary-foreground">
+                  <Instagram className="h-4 w-4" />
+                </Button>
+              </a>
               <Button variant="outline" size="icon" className="rounded-full hover:bg-primary hover:text-primary-foreground">
                 <Facebook className="h-4 w-4" />
               </Button>

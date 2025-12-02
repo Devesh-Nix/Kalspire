@@ -72,7 +72,7 @@ export function HomePage() {
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <Badge className="mb-6 px-4 py-2 text-sm font-medium bg-white/80 backdrop-blur-sm border-primary/20">
+            <Badge className="mb-6 px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground border-0 shadow-sm">
               <Sparkles className="h-3 w-3 mr-2 inline" />
               Handcrafted with Love
             </Badge>
@@ -341,10 +341,12 @@ export function HomePage() {
               Stay tuned for unique designs that blend art and functionality.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="outline" className="gap-2 rounded-full border-2">
-                <Instagram className="h-5 w-5" />
-                Follow on Instagram for Updates
-              </Button>
+              <a href="https://www.instagram.com/_kalspire_/" target="_blank" rel="noreferrer">
+                <Button size="lg" variant="outline" className="gap-2 rounded-full border-2">
+                  <Instagram className="h-5 w-5" />
+                  Follow on Instagram for Updates
+                </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -360,10 +362,12 @@ export function HomePage() {
               Follow us on Instagram for behind-the-scenes content, new arrivals, and special offers
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="gap-2 rounded-full px-8">
-                <Instagram className="h-5 w-5" />
-                @kalspire_creations
-              </Button>
+              <a href="https://www.instagram.com/_kalspire_/" target="_blank" rel="noreferrer">
+                <Button size="lg" variant="secondary" className="gap-2 rounded-full px-8">
+                  <Instagram className="h-5 w-5" />
+                  @_kalspire_
+                </Button>
+              </a>
             </div>
           </div>
         </div>

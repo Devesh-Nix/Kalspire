@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import kalspireMark from '@/assets/kalspire-mark.svg';
+import kalspireLogo from '@/assets/kalspire-logo.svg';
 import { ShoppingCart, Heart, User, Search, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
-import { APP_NAME, ROUTES } from '@/lib/constants';
+import { ROUTES } from '@/lib/constants';
 
 export function Header() {
   const [searchParams] = useSearchParams();
@@ -55,12 +57,18 @@ export function Header() {
           <div className="flex h-16 items-center justify-between gap-4">
             {/* Logo */}
             <Link to={ROUTES.HOME} className="flex items-center space-x-3 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold text-lg shadow-md group-hover:shadow-lg transition-all">
-                K
-              </div>
-              <span className="text-2xl font-bold font-serif text-foreground group-hover:text-primary transition-colors hidden sm:inline">
-                {APP_NAME}
-              </span>
+              {/* Show emblem on mobile only */}
+              <img
+                src={kalspireMark}
+                alt="Kalspire"
+                className="h-10 w-10 rounded-lg shadow-md group-hover:shadow-lg transition-shadow sm:hidden"
+              />
+              {/* Show wordmark on tablet/desktop */}
+              <img
+                src={kalspireLogo}
+                alt="Kalspire Artisan Crochet & Resin"
+                className="hidden sm:block h-8 w-auto"
+              />
             </Link>
 
             {/* Search Bar */}

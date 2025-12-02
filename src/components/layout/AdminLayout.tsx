@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import kalspireMark from '@/assets/kalspire-mark.svg';
 import { LayoutDashboard, Package, FolderTree, ShoppingCart, LogOut, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
@@ -62,15 +63,17 @@ export function AdminLayout() {
   const SidebarContent = () => (
     <>
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2 border-b px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-          K
-        </div>
-        <div>
-          <p className="text-sm font-semibold">{APP_NAME}</p>
-          <p className="text-xs text-muted-foreground">Admin Panel</p>
-        </div>
-      </div>
+          <div className="flex h-16 items-center gap-3 border-b px-6">
+            <img
+              src={kalspireMark}
+              alt="Kalspire"
+              className="h-8 w-8 rounded-lg"
+            />
+            <div>
+              <p className="text-sm font-semibold">{APP_NAME}</p>
+              <p className="text-xs text-muted-foreground">Admin Panel</p>
+            </div>
+          </div>
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-4">
