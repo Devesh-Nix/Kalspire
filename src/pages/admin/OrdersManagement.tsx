@@ -60,33 +60,35 @@ export function OrdersManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold">Orders Management</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-3xl sm:text-4xl font-bold font-serif">Orders Management</h1>
+          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             Manage and track all customer orders
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Package className="h-5 w-5 text-muted-foreground" />
-          <span className="text-2xl font-bold">{orders.length}</span>
-          <span className="text-muted-foreground">Total Orders</span>
+        <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full">
+          <Package className="h-5 w-5 text-primary" />
+          <span className="text-2xl font-bold text-primary">{orders.length}</span>
+          <span className="text-sm text-muted-foreground">Orders</span>
         </div>
       </div>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle>All Orders</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">All Orders</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {orders.length === 0 ? (
-            <div className="text-center py-12">
-              <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <div className="text-center py-12 px-4">
+              <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
               <p className="text-muted-foreground">No orders found</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <Table>
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Order ID</TableHead>
@@ -270,7 +272,152 @@ export function OrdersManagement() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="lg:hidden divide-y">
+                {orders.map((order) => (
+                  <div key={order.id} className="p-4">
+                    <div className="space-y-3">
+                      {/* Order Header */}
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-semibold text-base">#{order.id.slice(0, 8)}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {typeof order.userId === 'object' && order.userId !== null
+                              ? (order.userId as any).name
+                              : order.user?.name || 'N/A'}
+                          </p>
+                        </div>
+                        <Badge
+                          variant={
+                            order.paymentStatus === 'completed'
+                              ? 'default'
+                              : order.paymentStatus === 'failed'
+                              ? 'destructive'
+                              : 'secondary'
+                          }
+                          className="capitalize text-xs"
+                        >
+                          {order.paymentStatus}
+                        </Badge>
+                      </div>
+
+                      {/* Order Details */}
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{order.items.length} items</span>
+                        <span className="text-lg font-bold text-primary">₹{order.totalAmount.toLocaleString()}</span>
+                      </div>
+
+                      {/* Status Selector */}
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm text-muted-foreground">Status:</label>
+                        <select
+                          value={order.status}
+                          onChange={(e) =>
+                            handleStatusChange(order.id, e.target.value as Order['status'])
+                          }
+                          className="flex-1 px-3 py-1.5 rounded-full border bg-background capitalize text-sm"
+                          disabled={updateStatusMutation.isPending}
+                        >
+                          {statusOptions.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Date */}
+                      <p className="text-xs text-muted-foreground">
+                        {format(new Date(order.createdAt), 'MMM dd, yyyy hh:mm a')}
+                      </p>
+
+                      {/* Expand Button */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleOrderDetails(order.id)}
+                        className="w-full rounded-full"
+                      >
+                        <Eye className="h-4 w-4 mr-1" />
+                        {expandedOrder === order.id ? 'Hide' : 'View'} Details
+                        <ChevronDown
+                          className={`h-4 w-4 ml-1 transition-transform ${
+                            expandedOrder === order.id ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </Button>
+
+                      {/* Expanded Details */}
+                      {expandedOrder === order.id && (
+                        <div className="mt-4 space-y-4 bg-muted/30 p-4 rounded-lg">
+                          {/* Order Items */}
+                          <div>
+                            <h4 className="font-semibold mb-2 text-sm">Order Items</h4>
+                            <div className="space-y-2">
+                              {order.items.map((item, index) => {
+                                const product =
+                                  typeof item.productId === 'object' && item.productId !== null
+                                    ? (item.productId as any)
+                                    : item.product;
+                                return (
+                                  <div
+                                    key={index}
+                                    className="flex items-center gap-3 p-2 bg-background rounded-lg"
+                                  >
+                                    {product?.images?.[0] && (
+                                      <img
+                                        src={product.images[0]}
+                                        alt={product.name || 'Product'}
+                                        className="h-12 w-12 object-cover rounded flex-shrink-0"
+                                      />
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-medium text-sm line-clamp-1">
+                                        {product?.name || 'Product'}
+                                      </p>
+                                      <p className="text-xs text-muted-foreground">
+                                        Qty: {item.quantity} × ₹{item.price}
+                                      </p>
+                                    </div>
+                                    <p className="font-semibold text-sm">
+                                      ₹{(item.price * item.quantity).toLocaleString()}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Shipping Address */}
+                          <div>
+                            <h4 className="font-semibold mb-2 text-sm">Shipping Address</h4>
+                            <div className="p-3 bg-background rounded-lg text-sm">
+                              <p className="font-medium">
+                                {order.shippingAddress.fullName}
+                              </p>
+                              <p className="text-muted-foreground">
+                                {order.shippingAddress.phone}
+                              </p>
+                              <p className="text-muted-foreground mt-1">
+                                {order.shippingAddress.addressLine1}
+                                {order.shippingAddress.addressLine2 &&
+                                  `, ${order.shippingAddress.addressLine2}`}
+                              </p>
+                              <p className="text-muted-foreground">
+                                {order.shippingAddress.city}, {order.shippingAddress.state}{' '}
+                                - {order.shippingAddress.pincode}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

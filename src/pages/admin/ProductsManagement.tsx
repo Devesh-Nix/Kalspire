@@ -164,14 +164,14 @@ export function ProductsManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold">Products Management</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-3xl sm:text-4xl font-bold font-serif">Products Management</h1>
+          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             Manage your product inventory and stock levels
           </p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)} className="gap-2">
+        <Button onClick={() => setIsFormOpen(true)} className="gap-2 rounded-full shadow-sm w-full sm:w-auto">
           <Plus className="h-4 w-4" />
           Add Product
         </Button>
@@ -179,10 +179,13 @@ export function ProductsManagement() {
 
       {/* Product Form */}
       {isFormOpen && (
-        <Card>
-          <CardContent className="p-6">
+        <Card className="shadow-md">
+          <CardContent className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">
+              {editingProduct ? 'Edit Product' : 'Add New Product'}
+            </h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Product Name *</label>
                   <Input
@@ -345,11 +348,11 @@ export function ProductsManagement() {
                 )}
               </div>
 
-              <div className="flex gap-2">
-                <Button type="submit">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button type="submit" className="rounded-full">
                   {editingProduct ? 'Update' : 'Create'} Product
                 </Button>
-                <Button type="button" variant="outline" onClick={handleCancel}>
+                <Button type="button" variant="outline" onClick={handleCancel} className="rounded-full">
                   Cancel
                 </Button>
               </div>
@@ -358,76 +361,133 @@ export function ProductsManagement() {
         </Card>
       )}
 
-      {/* Products Table */}
-      <Card>
+      {/* Products List */}
+      <Card className="shadow-sm">
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-8 text-center text-muted-foreground">Loading products...</div>
           ) : productsData?.products && productsData.products.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Stock</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Product</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Price</TableHead>
+                      <TableHead>Stock</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {productsData.products.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center">
+                              <Package className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                            <div>
+                              <p className="font-medium">{product.name}</p>
+                              <p className="text-sm text-muted-foreground line-clamp-1">
+                                {product.description}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{product.category?.name || 'N/A'}</TableCell>
+                        <TableCell>{formatCurrency(product.price)}</TableCell>
+                        <TableCell>
+                          <Badge variant={product.stock === 0 ? 'destructive' : product.stock < 10 ? 'secondary' : 'default'}>
+                            {product.stock} units
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={product.isAvailable ? 'success' : 'secondary'}>
+                            {product.isAvailable ? 'Available' : 'Unavailable'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(product)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDelete(product.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="lg:hidden divide-y">
                 {productsData.products.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center">
-                          <Package className="h-5 w-5 text-muted-foreground" />
+                  <div key={product.id} className="p-4 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-start gap-3">
+                      <div className="h-16 w-16 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                        <Package className="h-7 w-7 text-muted-foreground" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-base line-clamp-1">{product.name}</h3>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                          {product.description}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                          <Badge variant="outline" className="text-xs">
+                            {product.category?.name || 'N/A'}
+                          </Badge>
+                          <Badge variant={product.stock === 0 ? 'destructive' : product.stock < 10 ? 'secondary' : 'default'} className="text-xs">
+                            {product.stock} units
+                          </Badge>
+                          <Badge variant={product.isAvailable ? 'default' : 'secondary'} className="text-xs">
+                            {product.isAvailable ? 'Available' : 'Unavailable'}
+                          </Badge>
                         </div>
-                        <div>
-                          <p className="font-medium">{product.name}</p>
-                          <p className="text-sm text-muted-foreground line-clamp-1">
-                            {product.description}
-                          </p>
+                        <div className="flex items-center justify-between mt-3">
+                          <span className="text-lg font-bold text-primary">{formatCurrency(product.price)}</span>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(product)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(product.id)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell>{product.category?.name || 'N/A'}</TableCell>
-                    <TableCell>{formatCurrency(product.price)}</TableCell>
-                    <TableCell>
-                      <Badge variant={product.stock === 0 ? 'destructive' : product.stock < 10 ? 'secondary' : 'default'}>
-                        {product.stock} units
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={product.isAvailable ? 'success' : 'secondary'}>
-                        {product.isAvailable ? 'Available' : 'Unavailable'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEdit(product)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+            </>
           ) : (
             <div className="p-8 text-center text-muted-foreground">
-              No products found. Create your first product!
+              <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
+              <p>No products found. Create your first product!</p>
             </div>
           )}
         </CardContent>

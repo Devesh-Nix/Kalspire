@@ -155,14 +155,14 @@ export function CategoriesManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold">Categories Management</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-3xl sm:text-4xl font-bold font-serif">Categories Management</h1>
+          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             Organize your products into categories
           </p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)} className="gap-2">
+        <Button onClick={() => setIsFormOpen(true)} className="gap-2 rounded-full shadow-sm w-full sm:w-auto">
           <Plus className="h-4 w-4" />
           Add Category
         </Button>
@@ -170,8 +170,11 @@ export function CategoriesManagement() {
 
       {/* Category Form */}
       {isFormOpen && (
-        <Card>
-          <CardContent className="p-6">
+        <Card className="shadow-md">
+          <CardContent className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">
+              {editingCategory ? 'Edit Category' : 'Add New Category'}
+            </h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Category Name *</label>
@@ -270,11 +273,11 @@ export function CategoriesManagement() {
                 )}
               </div>
 
-              <div className="flex gap-2">
-                <Button type="submit">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button type="submit" className="rounded-full">
                   {editingCategory ? 'Update' : 'Create'} Category
                 </Button>
-                <Button type="button" variant="outline" onClick={handleCancel}>
+                <Button type="button" variant="outline" onClick={handleCancel} className="rounded-full">
                   Cancel
                 </Button>
               </div>
@@ -283,89 +286,158 @@ export function CategoriesManagement() {
         </Card>
       )}
 
-      {/* Categories Table */}
-      <Card>
+      {/* Categories List */}
+      <Card className="shadow-sm">
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-8 text-center text-muted-foreground">Loading categories...</div>
           ) : categories && categories.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {categories.map((category) => (
-                  <TableRow key={category.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        {category.image ? (
-                          <img
-                            src={category.image}
-                            alt={category.name}
-                            className="h-10 w-10 rounded-md object-cover border"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center">
-                            <FolderTree className="h-5 w-5 text-muted-foreground" />
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {categories.map((category) => (
+                      <TableRow key={category.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            {category.image ? (
+                              <img
+                                src={category.image}
+                                alt={category.name}
+                                className="h-10 w-10 rounded-md object-cover border"
+                              />
+                            ) : (
+                              <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center">
+                                <FolderTree className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            )}
+                            <div>
+                              <p className="font-medium">{category.name}</p>
+                            </div>
                           </div>
-                        )}
-                        <div>
-                          <p className="font-medium">{category.name}</p>
+                        </TableCell>
+                        <TableCell>
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {category.description || 'No description'}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={category.isActive ? 'success' : 'secondary'}>
+                            {category.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleToggleActive(category)}
+                              title={category.isActive ? 'Make Inactive' : 'Make Active'}
+                            >
+                              {category.isActive ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(category)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDelete(category.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="lg:hidden divide-y">
+                {categories.map((category) => (
+                  <div key={category.id} className="p-4 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-start gap-3">
+                      {category.image ? (
+                        <img
+                          src={category.image}
+                          alt={category.name}
+                          className="h-16 w-16 rounded-lg object-cover border flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="h-16 w-16 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                          <FolderTree className="h-7 w-7 text-muted-foreground" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-base">{category.name}</h3>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                          {category.description || 'No description'}
+                        </p>
+                        <div className="flex items-center justify-between mt-3">
+                          <Badge variant={category.isActive ? 'default' : 'secondary'} className="text-xs">
+                            {category.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleToggleActive(category)}
+                              className="h-8 w-8 p-0"
+                              title={category.isActive ? 'Make Inactive' : 'Make Active'}
+                            >
+                              {category.isActive ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(category)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(category.id)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {category.description || 'No description'}
-                      </p>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={category.isActive ? 'success' : 'secondary'}>
-                        {category.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleToggleActive(category)}
-                          title={category.isActive ? 'Make Inactive' : 'Make Active'}
-                        >
-                          {category.isActive ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEdit(category)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(category.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+            </>
           ) : (
             <div className="p-8 text-center text-muted-foreground">
-              No categories found. Create your first category!
+              <FolderTree className="h-12 w-12 mx-auto mb-3 opacity-50" />
+              <p>No categories found. Create your first category!</p>
             </div>
           )}
         </CardContent>

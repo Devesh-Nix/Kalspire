@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { Check, Shield, Truck, MapPin } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -73,17 +74,48 @@ export function CheckoutPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8">Checkout</h1>
+      <div className="bg-gradient-to-b from-muted/20 to-white min-h-screen py-8">
+        <div className="container mx-auto px-4">
+          {/* Progress Indicator */}
+          <div className="mb-8">
+            <div className="flex items-center justify-center gap-2 sm:gap-4 mb-4">
+              <div className="flex items-center">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
+                  <Check className="h-4 w-4" />
+                </div>
+                <span className="ml-2 text-sm font-medium hidden sm:inline">Cart</span>
+              </div>
+              <div className="h-0.5 w-12 sm:w-20 bg-primary"></div>
+              <div className="flex items-center">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
+                  2
+                </div>
+                <span className="ml-2 text-sm font-medium hidden sm:inline">Shipping</span>
+              </div>
+              <div className="h-0.5 w-12 sm:w-20 bg-muted"></div>
+              <div className="flex items-center">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground font-semibold">
+                  3
+                </div>
+                <span className="ml-2 text-sm font-medium text-muted-foreground hidden sm:inline">Confirmation</span>
+              </div>
+            </div>
+          </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+          <h1 className="text-5xl font-bold mb-3 font-serif">Checkout</h1>
+          <p className="text-muted-foreground mb-8 text-lg">Complete your order</p>
+
+          <div className="grid gap-8 lg:grid-cols-3">
           {/* Checkout Form */}
           <div className="lg:col-span-2 space-y-6">
             {/* Saved Addresses */}
             {addressesData?.addresses && addressesData.addresses.length > 0 && !useNewAddress && (
-              <Card>
+              <Card className="border-0 shadow-sm bg-white">
                 <CardHeader>
-                  <CardTitle>Select Delivery Address</CardTitle>
+                  <CardTitle className="flex items-center gap-2 font-serif">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    Select Delivery Address
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {addressesData.addresses.map((address) => (
@@ -122,9 +154,9 @@ export function CheckoutPage() {
 
             {/* New Address Form */}
             {(useNewAddress || !addressesData?.addresses || addressesData.addresses.length === 0) && (
-              <Card>
+              <Card className="border-0 shadow-sm bg-white">
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Shipping Information</CardTitle>
+                  <CardTitle className="font-serif">Shipping Information</CardTitle>
                   {addressesData?.addresses && addressesData.addresses.length > 0 && (
                     <Button 
                       variant="ghost" 
@@ -243,16 +275,16 @@ export function CheckoutPage() {
 
           {/* Order Summary */}
           <div>
-            <Card className="sticky top-20">
+            <Card className="sticky top-24 border-0 shadow-md bg-white">
               <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
+                <CardTitle className="font-serif text-2xl">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {items.map((item) => (
-                    <div key={item.productId} className="flex justify-between text-sm">
+                    <div key={item.productId} className="flex justify-between text-sm py-2 border-b">
                       <span className="text-muted-foreground">
-                        {item.product.name} x {item.quantity}
+                        {item.product.name} × {item.quantity}
                       </span>
                       <span className="font-medium">
                         {formatCurrency(item.product.price * item.quantity)}
@@ -261,25 +293,37 @@ export function CheckoutPage() {
                   ))}
                 </div>
 
-                <div className="border-t pt-4 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-medium">{formatCurrency(getTotalPrice())}</span>
+                <div className="border-t pt-4 space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Subtotal:</span>
+                    <span className="font-semibold">{formatCurrency(getTotalPrice())}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Shipping</span>
-                    <span className="font-medium">Free</span>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Shipping:</span>
+                    <span className="font-semibold text-green-600">Free</span>
                   </div>
-                  <div className="flex justify-between pt-2 border-t">
-                    <span className="font-semibold">Total</span>
-                    <span className="text-xl font-bold">{formatCurrency(getTotalPrice())}</span>
+                  <div className="flex justify-between pt-3 border-t">
+                    <span className="font-semibold text-lg">Total:</span>
+                    <span className="text-2xl font-bold text-primary font-serif">{formatCurrency(getTotalPrice())}</span>
+                  </div>
+                </div>
+
+                {/* Trust Badges */}
+                <div className="border-t pt-4 space-y-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Shield className="h-4 w-4 text-primary" />
+                    <span className="text-muted-foreground">Secure Payment</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Truck className="h-4 w-4 text-primary" />
+                    <span className="text-muted-foreground">Free Shipping</span>
                   </div>
                 </div>
 
                 <Button
                   type="submit"
                   form="checkout-form"
-                  className="w-full"
+                  className="w-full rounded-full shadow-md hover:shadow-lg"
                   size="lg"
                   disabled={isProcessing || (!selectedAddressId && !useNewAddress)}
                   onClick={(e) => {
@@ -300,6 +344,7 @@ export function CheckoutPage() {
           </div>
         </div>
       </div>
+    </div>
     </MainLayout>
   );
 }
