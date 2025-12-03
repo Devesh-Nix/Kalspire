@@ -23,14 +23,14 @@ export function Select({ label, value, onChange, children }: SelectProps) {
             <RadixSelect.Viewport className="p-1">
               {React.Children.map(children as React.ReactElement[], (child) => {
                 if (!React.isValidElement(child)) return child;
-                const val = (child.props as any).value ?? '';
+                const childProps = child.props as { value?: string; children: React.ReactNode };
                 return (
                   <RadixSelect.Item
-                    key={val}
-                    value={val}
+                    key={childProps.value || ''}
+                    value={childProps.value || ''}
                     className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer hover:bg-muted focus:bg-muted outline-none"
                   >
-                    <RadixSelect.ItemText>{child.props.children}</RadixSelect.ItemText>
+                    <RadixSelect.ItemText>{childProps.children}</RadixSelect.ItemText>
                     <RadixSelect.ItemIndicator>
                       <Check className="h-4 w-4 text-primary" />
                     </RadixSelect.ItemIndicator>
