@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingBag, Filter, Heart, Star, Sparkles } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -48,8 +48,9 @@ export function ProductsPage() {
       page: pageParam,
     }),
     getNextPageParam: (lastPage, pages) => {
-      const nextPage = pages.length + 1;
-      return lastPage.products.length === 20 ? nextPage : undefined;
+      const currentPage = pages.length;
+      const totalPages = Math.ceil(lastPage.total / 20);
+      return currentPage < totalPages ? currentPage + 1 : undefined;
     },
     initialPageParam: 1,
   });
@@ -68,10 +69,11 @@ export function ProductsPage() {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          console.log('Loading next page...', { hasNextPage, isFetchingNextPage });
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '100px' }
     );
 
     const currentTarget = observerTarget.current;
