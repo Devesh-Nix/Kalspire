@@ -282,10 +282,10 @@ export function ProductDetailPage() {
                   </div>
                   <div className="flex items-start gap-3">
                     <Package className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
+                    {/* <div>
                       <p className="font-medium">Easy Returns within 7 days</p>
                       <p className="text-sm text-muted-foreground">Hassle-free return policy</p>
-                    </div>
+                    </div> */}
                   </div>
                 </CardContent>
               </Card>

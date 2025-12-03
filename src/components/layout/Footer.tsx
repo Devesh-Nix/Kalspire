@@ -129,11 +129,11 @@ export function Footer() {
                   Terms of Service
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="#" className="hover:text-primary transition-colors">
                   Return Policy
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
           </div>
