@@ -118,9 +118,7 @@ export function ProductsManagement() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const imageUrls = response.data.images.map((img: any) => 
-        `${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000'}${img.url}`
-      );
+      const imageUrls = response.data.images.map((img: any) => img.url);
       
       setUploadedImages([...uploadedImages, ...imageUrls]);
       toast.success(`${files.length} image(s) uploaded successfully`);
