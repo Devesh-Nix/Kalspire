@@ -255,7 +255,7 @@ export function HomePage() {
                       {product.stock === 0 ? (
                         <Badge variant="destructive" className="text-xs">Out of Stock</Badge>
                       ) : product.stock < 10 ? (
-                        <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px">Only {product.stock} left</Badge>
+                        <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px ml-1">Only {product.stock} left</Badge>
                       ) : null}
                     </div>
                   </CardContent>
