@@ -53,6 +53,8 @@ export function ProductsManagement() {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast.success('Product created successfully');
       setIsFormOpen(false);
+      setUploadedImages([]);
+      setUseUrlInput(false);
       reset();
     },
     onError: () => toast.error('Failed to create product'),
@@ -66,6 +68,8 @@ export function ProductsManagement() {
       toast.success('Product updated successfully');
       setIsFormOpen(false);
       setEditingProduct(null);
+      setUploadedImages([]);
+      setUseUrlInput(false);
       reset();
     },
     onError: () => toast.error('Failed to update product'),
@@ -120,7 +124,7 @@ export function ProductsManagement() {
 
       const imageUrls = response.data.images.map((img: any) => img.url);
       
-      setUploadedImages([...uploadedImages, ...imageUrls]);
+      setUploadedImages(prev => [...prev, ...imageUrls]);
       toast.success(`${files.length} image(s) uploaded successfully`);
     } catch (error) {
       toast.error('Failed to upload images');
