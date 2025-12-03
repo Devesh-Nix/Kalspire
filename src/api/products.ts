@@ -7,6 +7,9 @@ export const productsApi = {
     search?: string;
     page?: number;
     limit?: number;
+    priceMin?: number;
+    priceMax?: number;
+    sort?: 'price:asc' | 'price:desc' | string;
   }): Promise<{ products: Product[]; total: number }> => {
     const { data } = await apiClient.get('/products', { params });
     return data;

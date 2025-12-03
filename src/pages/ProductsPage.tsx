@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingBag, Filter, Heart, Star, Sparkles } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
+import { Select } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { productsApi } from '@/api/products';
@@ -16,15 +18,25 @@ export function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryId = searchParams.get('category');
   const searchQuery = searchParams.get('search');
+  const priceMinParam = searchParams.get('priceMin');
+  const priceMaxParam = searchParams.get('priceMax');
+  const sortParam = searchParams.get('sort');
+  const priceMin = priceMinParam ? Number(priceMinParam) : undefined;
+  const priceMax = priceMaxParam ? Number(priceMaxParam) : undefined;
+  const sort = sortParam || undefined;
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
 
   const { data: productsData, isLoading } = useQuery({
-    queryKey: ['products', categoryId, searchQuery],
+    queryKey: ['products', categoryId, searchQuery, priceMin, priceMax, sort],
     queryFn: () => productsApi.getAll({ 
       categoryId: categoryId || undefined,
-      search: searchQuery || undefined 
+      search: searchQuery || undefined,
+      priceMin,
+      priceMax,
+      sort,
     }),
   });
 
@@ -40,7 +52,43 @@ export function ProductsPage() {
       searchParams.delete('category');
     }
     setSearchParams(searchParams);
+    // Auto-close filters on mobile
+    if (window.innerWidth < 1024) {
+      setMobileFiltersOpen(false);
+    }
   };
+
+  const handlePriceChange = (min?: number, max?: number) => {
+    if (min !== undefined) {
+      searchParams.set('priceMin', String(min));
+    } else {
+      searchParams.delete('priceMin');
+    }
+    if (max !== undefined) {
+      searchParams.set('priceMax', String(max));
+    } else {
+      searchParams.delete('priceMax');
+    }
+    setSearchParams(searchParams);
+  };
+
+  const handleSortChange = (value: 'price:asc' | 'price:desc' | '') => {
+    if (value) {
+      searchParams.set('sort', value);
+    } else {
+      searchParams.delete('sort');
+    }
+    setSearchParams(searchParams);
+  };
+
+  // Close mobile filters when resizing to desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setMobileFiltersOpen(false);
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const handleAddToCart = (product: any) => {
     addItem(product);
@@ -63,57 +111,126 @@ export function ProductsPage() {
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-10">
-          <h1 className="text-5xl font-bold mb-3 font-serif">All Products</h1>
-          <p className="text-muted-foreground text-lg">
-            {productsData?.total || 0} handcrafted treasures available
-          </p>
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <div>
+            <h1 className="text-3xl sm:text-5xl font-bold font-serif">All Products</h1>
+            <p className="text-muted-foreground text-sm sm:text-lg">
+              {productsData?.total || 0} handcrafted treasures available
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            className="rounded-full gap-2 lg:hidden"
+            onClick={() => setMobileFiltersOpen((o) => !o)}
+            aria-expanded={mobileFiltersOpen}
+            aria-controls="mobile-filters"
+          >
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
         </div>
 
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
-          <aside className="w-full lg:w-72 shrink-0">
-            <Card className="border-0 shadow-sm bg-white sticky top-24">
+          <aside className="w-full lg:w-72 shrink-0 relative">
+            <Card className={`border-0 shadow-sm bg-white ${mobileFiltersOpen ? 'z-50' : 'hidden'} lg:block sticky top-24`} id="mobile-filters">
               <CardContent className="p-6">
                 <div className="flex items-center gap-2 mb-6">
                   <Filter className="h-5 w-5 text-primary" />
                   <h2 className="font-semibold text-lg font-serif">Filters</h2>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div>
                     <h3 className="text-sm font-medium mb-3 text-muted-foreground uppercase tracking-wide">Categories</h3>
-                    <div className="space-y-2">
-                      <Button
-                        variant={!categoryId ? 'default' : 'ghost'}
-                        className="w-full justify-start rounded-full"
-                        size="sm"
-                        onClick={() => handleCategoryChange(null)}
-                      >
-                        All Products
-                      </Button>
+                    <Select
+                      label="Select Category"
+                      value={categoryId || 'all'}
+                      onChange={(e) => handleCategoryChange(e.target.value === 'all' ? null : e.target.value)}
+                    >
+                      <option value="all">All Products</option>
                       {categories?.filter(cat => cat.isActive).map((category) => (
-                        <Button
-                          key={category.id}
-                          variant={categoryId === category.id ? 'default' : 'ghost'}
-                          className="w-full justify-start rounded-full"
-                          size="sm"
-                          onClick={() => handleCategoryChange(category.id)}
-                        >
-                          {category.name}
-                        </Button>
+                        <option key={category.id} value={category.id}>{category.name}</option>
                       ))}
+                    </Select>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm font-medium mb-3 text-muted-foreground uppercase tracking-wide">Price Range</h3>
+                    <div className="space-y-3">
+                      <div className="px-1">
+                        <div className="relative h-8">
+                          {/* Track */}
+                          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 bg-muted rounded-full" />
+                          {/* Selected range highlight (optional visual) */}
+                          {/* Sliders: min and max */}
+                          <input
+                            type="range"
+                            min={0}
+                            max={10000}
+                            step={10}
+                            value={priceMin ?? 0}
+                            className="absolute w-full appearance-none bg-transparent h-8"
+                            onChange={(e) => {
+                              const newMin = Number(e.target.value);
+                              const clampedMin = Math.min(newMin, priceMax ?? 10000);
+                              handlePriceChange(clampedMin, priceMax);
+                            }}
+                          />
+                          <input
+                            type="range"
+                            min={0}
+                            max={10000}
+                            step={10}
+                            value={priceMax ?? 10000}
+                            className="absolute w-full appearance-none bg-transparent h-8"
+                            onChange={(e) => {
+                              const newMax = Number(e.target.value);
+                              const clampedMax = Math.max(newMax, priceMin ?? 0);
+                              handlePriceChange(priceMin, clampedMax);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>{priceMin !== undefined ? `₹${priceMin}` : '₹0'}</span>
+                        <span>{priceMax !== undefined ? `₹${priceMax}` : '₹10000'}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>Drag left handle for min</span>
+                        <span>Drag right handle for max</span>
+                      </div>
                     </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm font-medium mb-3 text-muted-foreground uppercase tracking-wide">Sort By</h3>
+                    <Select
+                      value={sort || 'default'}
+                      onChange={(e) => handleSortChange((e.target.value === 'default' ? '' : e.target.value) as 'price:asc' | 'price:desc' | '')}
+                    >
+                      <option value="default">Default</option>
+                      <option value="price:asc">Price: Low to High</option>
+                      <option value="price:desc">Price: High to Low</option>
+                    </Select>
                   </div>
                 </div>
               </CardContent>
             </Card>
+            {/* Mobile overlay to close when clicking outside */}
+            {mobileFiltersOpen && (
+              <button
+                aria-hidden="true"
+                className="fixed inset-0 z-40 bg-black/30 lg:hidden"
+                onClick={() => setMobileFiltersOpen(false)}
+              />
+            )}
           </aside>
 
           {/* Products Grid */}
           <div className="flex-1">
             {isLoading ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
                   <Card key={i} className="animate-pulse border-0">
                     <div className="aspect-square bg-muted rounded-t-lg" />
@@ -125,7 +242,7 @@ export function ProductsPage() {
                 ))}
               </div>
             ) : productsData?.products && productsData.products.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {productsData.products.map((product) => (
                   <Card key={product.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-soft transition-all duration-300 hover:-translate-y-1 bg-white">
                     <Link to={`/products/${product.id}`}>
