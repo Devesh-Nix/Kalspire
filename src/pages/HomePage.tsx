@@ -164,7 +164,7 @@ export function HomePage() {
           </div>
 
           {productsLoading ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[...Array(4)].map((_, i) => (
                 <Card key={i} className="animate-pulse border-0">
                   <div className="aspect-square bg-muted rounded-t-lg" />
@@ -176,7 +176,7 @@ export function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {productsData?.products?.slice(0, 8).map((product) => (
                 <Card key={product.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-soft transition-all duration-300 hover:-translate-y-1 bg-white">
                   <Link to={`/products/${product.id}`}>

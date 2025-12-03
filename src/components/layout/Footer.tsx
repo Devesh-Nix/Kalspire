@@ -28,10 +28,11 @@ export function Footer() {
       </div>
 
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="container mx-auto px-6 lg:px-8 py-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {/* Brand Section */}
-          <div>
+          <div className="col-span-2 md:col-span-1">
             <h3 className="mb-4 text-xl font-bold font-serif flex items-center gap-2">
               <Heart className="h-5 w-5 text-primary fill-primary" />
               {APP_NAME}
@@ -135,7 +136,7 @@ export function Footer() {
               </li>
             </ul>
           </div>
-        </div>
+          </div>
 
         {/* Trust Badges */}
         <div className="mt-12 pt-8 border-t">
@@ -159,6 +160,7 @@ export function Footer() {
               <p className="text-sm font-medium">Secure Payments</p>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
