@@ -8,7 +8,7 @@ import { categoriesApi } from '@/api/categories';
 export function AdminDashboard() {
   const { data: productsData } = useQuery({
     queryKey: ['products', 'all'],
-    queryFn: () => productsApi.getAll(),
+    queryFn: () => productsApi.getAll({ limit: 100 }),
   });
 
   const { data: ordersData } = useQuery({

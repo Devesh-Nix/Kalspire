@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingBag, Filter, Heart, Star, Sparkles } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -25,25 +25,66 @@ export function ProductsPage() {
   const priceMax = priceMaxParam ? Number(priceMaxParam) : undefined;
   const sort = sortParam || undefined;
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const observerTarget = useRef<HTMLDivElement>(null);
   
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
 
-  const { data: productsData, isLoading } = useQuery({
+  const { 
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery({
     queryKey: ['products', categoryId, searchQuery, priceMin, priceMax, sort],
-    queryFn: () => productsApi.getAll({ 
+    queryFn: ({ pageParam = 1 }) => productsApi.getAll({ 
       categoryId: categoryId || undefined,
       search: searchQuery || undefined,
       priceMin,
       priceMax,
       sort,
+      limit: 20,
+      page: pageParam,
     }),
+    getNextPageParam: (lastPage, pages) => {
+      const nextPage = pages.length + 1;
+      return lastPage.products.length === 20 ? nextPage : undefined;
+    },
+    initialPageParam: 1,
   });
+
+  // Flatten all pages into a single products array
+  const productsData = data?.pages.flatMap((page) => page.products) || [];
+  const totalProducts = data?.pages[0]?.total || 0;
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: categoriesApi.getAll,
   });
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const handleCategoryChange = (catId: string | null) => {
     if (catId) {
@@ -115,7 +156,7 @@ export function ProductsPage() {
           <div>
             <h1 className="text-3xl sm:text-5xl font-bold font-serif">All Products</h1>
             <p className="text-muted-foreground text-sm sm:text-lg">
-              {productsData?.total || 0} handcrafted treasures available
+              {totalProducts || 0} handcrafted treasures available
             </p>
           </div>
           <Button
@@ -241,9 +282,10 @@ export function ProductsPage() {
                   </Card>
                 ))}
               </div>
-            ) : productsData?.products && productsData.products.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {productsData.products.map((product) => (
+            ) : productsData && productsData.length > 0 ? (
+              <>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {productsData.map((product) => (
                   <Card key={product.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-soft transition-all duration-300 hover:-translate-y-1 bg-white">
                     <Link to={`/products/${product.id}`}>
                       <div className="aspect-square overflow-hidden bg-muted/30 relative">
@@ -327,7 +369,24 @@ export function ProductsPage() {
                     </CardContent>
                   </Card>
                 ))}
-              </div>
+                </div>
+
+                {/* Infinite Scroll Trigger & Loading Indicator */}
+                <div ref={observerTarget} className="flex justify-center py-8">
+                  {isFetchingNextPage ? (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                      <span>Loading more products...</span>
+                    </div>
+                  ) : hasNextPage ? (
+                    <div className="text-sm text-muted-foreground">Scroll for more</div>
+                  ) : (
+                    <div className="text-sm text-muted-foreground">
+                      You've reached the end • {totalProducts} products total
+                    </div>
+                  )}
+                </div>
+              </>
             ) : (
               <div className="text-center py-16">
                 <ShoppingBag className="h-20 w-20 mx-auto text-muted-foreground/50 mb-4" />

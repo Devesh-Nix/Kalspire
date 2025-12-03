@@ -56,7 +56,7 @@ export function Header() {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between gap-4">
             {/* Logo */}
-            <Link to={ROUTES.HOME} className="flex items-center space-x-3 group">
+            <Link to={ROUTES.HOME} className="flex items-center space-x-3 group flex-shrink-0">
               {/* Show emblem on mobile only */}
               <img
                 src={kalspireMark}
@@ -71,7 +71,7 @@ export function Header() {
               />
             </Link>
 
-            {/* Search Bar */}
+            {/* Search Bar - Desktop */}
             <div className="hidden md:flex flex-1 max-w-xl mx-8">
               <form onSubmit={handleSearch} className="relative w-full">
                 <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
@@ -85,8 +85,22 @@ export function Header() {
               </form>
             </div>
 
+            {/* Search Bar - Mobile (between logo and wishlist) */}
+            <div className="md:hidden flex-1 mx-2">
+              <form onSubmit={handleSearch} className="relative w-full">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 pr-3 h-9 rounded-full border-muted-foreground/20 focus:border-primary text-sm"
+                />
+              </form>
+            </div>
+
             {/* Navigation */}
-            <nav className="flex items-center space-x-2">
+            <nav className="flex items-center space-x-2 flex-shrink-0">
               {isAuthenticated ? (
                 <>
                   <Link to={ROUTES.WISHLIST} className="relative">

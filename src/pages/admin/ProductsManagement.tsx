@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2, Package, Upload, X, Link as LinkIcon } from 'lucide-react';
+import { Plus, Pencil, Trash2, Package, Upload, X, Link as LinkIcon, Crop } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ImageCropper } from '@/components/ui/ImageCropper';
 import { productsApi } from '@/api/products';
 import { categoriesApi } from '@/api/categories';
 import { formatCurrency } from '@/lib/utils';
@@ -28,11 +29,13 @@ export function ProductsManagement() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [useUrlInput, setUseUrlInput] = useState(false);
+  const [cropperImage, setCropperImage] = useState<string | null>(null);
+  const [cropperImageIndex, setCropperImageIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
   const { data: productsData, isLoading } = useQuery({
     queryKey: ['products', 'admin'],
-    queryFn: () => productsApi.getAll(),
+    queryFn: () => productsApi.getAll({ limit: 100 }),
   });
 
   const { data: categories } = useQuery({
@@ -138,6 +141,27 @@ export function ProductsManagement() {
     setUploadedImages(uploadedImages.filter((_, i) => i !== index));
   };
 
+  const openCropper = (imageUrl: string, index: number) => {
+    setCropperImage(imageUrl);
+    setCropperImageIndex(index);
+  };
+
+  const handleCropSave = (croppedImage: string) => {
+    if (cropperImageIndex !== null) {
+      const newImages = [...uploadedImages];
+      newImages[cropperImageIndex] = croppedImage;
+      setUploadedImages(newImages);
+      toast.success('Image adjusted successfully');
+    }
+    setCropperImage(null);
+    setCropperImageIndex(null);
+  };
+
+  const handleCropCancel = () => {
+    setCropperImage(null);
+    setCropperImageIndex(null);
+  };
+
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
     setUploadedImages(product.images || []);
@@ -166,6 +190,15 @@ export function ProductsManagement() {
 
   return (
     <div className="space-y-6">
+      {/* Image Cropper Modal */}
+      {cropperImage && (
+        <ImageCropper
+          image={cropperImage}
+          onSave={handleCropSave}
+          onCancel={handleCropCancel}
+        />
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold font-serif">Products Management</h1>
@@ -328,15 +361,26 @@ export function ProductsManagement() {
                               alt={`Product ${index + 1}`}
                               className="w-full h-24 object-cover rounded-lg border"
                             />
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="icon"
-                              className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={() => removeImage(index)}
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-1">
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => openCropper(url, index)}
+                              >
+                                <Crop className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => removeImage(index)}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         ))}
                       </div>
