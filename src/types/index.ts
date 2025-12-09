@@ -18,6 +18,13 @@ export interface Category {
   updatedAt: string;
 }
 
+export interface ColorVariant {
+  id?: string;
+  name: string;
+  hexCode: string;
+  stock: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -30,6 +37,7 @@ export interface Product {
   stock: number;
   isAvailable: boolean;
   tags?: string[];
+  colorVariants?: ColorVariant[];
   createdAt: string;
   updatedAt: string;
 }
@@ -38,6 +46,7 @@ export interface CartItem {
   productId: string;
   product: Product;
   quantity: number;
+  selectedColor?: ColorVariant;
 }
 
 export interface Address {

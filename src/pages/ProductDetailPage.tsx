@@ -12,12 +12,14 @@ import { useWishlistStore } from '@/store/wishlistStore';
 import { formatCurrency, convertGoogleDriveUrl } from '@/lib/utils';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/constants';
+import type { ColorVariant } from '@/types';
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [expandedSection, setExpandedSection] = useState<string | null>('description');
+  const [selectedColor, setSelectedColor] = useState<ColorVariant | null>(null);
   
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
@@ -33,8 +35,13 @@ export function ProductDetailPage() {
   const handleAddToCart = () => {
     if (!product) return;
     
+    if (product.colorVariants && product.colorVariants.length > 0 && !selectedColor) {
+      toast.error('Please select a color');
+      return;
+    }
+    
     for (let i = 0; i < quantity; i++) {
-      addItem(product);
+      addItem(product, 1, selectedColor || undefined);
     }
     toast.success(`Added ${quantity} item(s) to cart!`);
   };
@@ -226,6 +233,37 @@ export function ProductDetailPage() {
               {/* Quantity & Add to Cart */}
               <Card className="border-0 shadow-sm bg-gradient-to-br from-muted/30 to-white">
                 <CardContent className="p-6 space-y-5">
+                  {/* Color Selector */}
+                  {product.colorVariants && product.colorVariants.length > 0 && (
+                    <div>
+                      <label className="font-semibold text-lg mb-3 block">Choose Color:</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {product.colorVariants.map((color) => (
+                          <button
+                            key={color.id}
+                            onClick={() => color.stock > 0 && setSelectedColor(color)}
+                            disabled={color.stock === 0}
+                            className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                              selectedColor?.id === color.id
+                                ? 'border-primary bg-primary/5 shadow-md'
+                                : 'border-gray-200 hover:border-primary'
+                            } ${color.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                          >
+                            <div
+                              className="h-6 w-6 rounded-full border-2 border-gray-300"
+                              style={{ backgroundColor: color.hexCode }}
+                              title={color.hexCode}
+                            />
+                            <div className="text-left">
+                              <p className="text-sm font-medium">{color.name}</p>
+                              {color.stock === 0 && <p className="text-xs text-destructive">Out of Stock</p>}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between">
                     <label className="font-semibold text-lg">Quantity:</label>
                     <div className="flex items-center border-2 border-border rounded-full overflow-hidden">

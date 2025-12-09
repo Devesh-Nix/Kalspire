@@ -72,6 +72,10 @@ export function CheckoutPage() {
     return null;
   }
 
+  const subtotal = getTotalPrice();
+  const shipping = subtotal >= 1999 ? 0 : 100;
+  const total = subtotal + shipping;
+
   return (
     <MainLayout>
       <div className="bg-gradient-to-b from-muted/20 to-white min-h-screen py-8">
@@ -296,15 +300,24 @@ export function CheckoutPage() {
                 <div className="border-t pt-4 space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal:</span>
-                    <span className="font-semibold">{formatCurrency(getTotalPrice())}</span>
+                    <span className="font-semibold">{formatCurrency(subtotal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping:</span>
-                    <span className="font-semibold text-green-600">Free</span>
+                    {shipping === 0 ? (
+                      <span className="font-semibold text-green-600">Free</span>
+                    ) : (
+                      <span className="font-semibold">{formatCurrency(shipping)}</span>
+                    )}
                   </div>
+                  {subtotal < 1999 && (
+                    <p className="text-xs text-muted-foreground italic">
+                      Add {formatCurrency(1999 - subtotal)} more for free shipping!
+                    </p>
+                  )}
                   <div className="flex justify-between pt-3 border-t">
                     <span className="font-semibold text-lg">Total:</span>
-                    <span className="text-2xl font-bold text-primary font-serif">{formatCurrency(getTotalPrice())}</span>
+                    <span className="text-2xl font-bold text-primary font-serif">{formatCurrency(total)}</span>
                   </div>
                 </div>
 
@@ -316,7 +329,9 @@ export function CheckoutPage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Truck className="h-4 w-4 text-primary" />
-                    <span className="text-muted-foreground">Free Shipping</span>
+                    <span className="text-muted-foreground">
+                      {shipping === 0 ? 'Free Shipping' : 'Fast Delivery'}
+                    </span>
                   </div>
                 </div>
 

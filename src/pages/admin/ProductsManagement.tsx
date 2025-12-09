@@ -17,10 +17,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ImageCropper } from '@/components/ui/ImageCropper';
+import { ColorVariantManager } from '@/components/ui/ColorVariantManager';
 import { productsApi } from '@/api/products';
 import { categoriesApi } from '@/api/categories';
 import { formatCurrency } from '@/lib/utils';
-import type { Product } from '@/types';
+import type { Product, ColorVariant } from '@/types';
 import apiClient from '@/api/client';
 
 export function ProductsManagement() {
@@ -31,6 +32,7 @@ export function ProductsManagement() {
   const [useUrlInput, setUseUrlInput] = useState(false);
   const [cropperImage, setCropperImage] = useState<string | null>(null);
   const [cropperImageIndex, setCropperImageIndex] = useState<number | null>(null);
+  const [colorVariants, setColorVariants] = useState<ColorVariant[]>([]);
   const queryClient = useQueryClient();
 
   const { data: productsData, isLoading } = useQuery({
@@ -99,6 +101,7 @@ export function ProductsManagement() {
       stock: parseInt(data.stock),
       isAvailable: data.isAvailable === 'true',
       images: allImages.filter(Boolean),
+      colorVariants,
     };
 
     if (editingProduct) {
@@ -165,6 +168,7 @@ export function ProductsManagement() {
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
     setUploadedImages(product.images || []);
+    setColorVariants(product.colorVariants || []);
     setUseUrlInput(false);
     reset({
       ...product,
@@ -184,6 +188,7 @@ export function ProductsManagement() {
     setIsFormOpen(false);
     setEditingProduct(null);
     setUploadedImages([]);
+    setColorVariants([]);
     setUseUrlInput(false);
     reset();
   };
@@ -392,6 +397,13 @@ export function ProductsManagement() {
                     placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
                   />
                 )}
+              </div>
+
+              <div className="border-t pt-6">
+                <ColorVariantManager
+                  variants={colorVariants}
+                  onChange={setColorVariants}
+                />
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2">

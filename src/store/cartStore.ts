@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CartItem, Product } from '@/types';
+import type { CartItem, Product, ColorVariant } from '@/types';
 
 interface CartState {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, quantity?: number, selectedColor?: ColorVariant) => void;
+  removeItem: (productId: string, colorId?: string) => void;
+  updateQuantity: (productId: string, quantity: number, colorId?: string) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
@@ -17,14 +17,18 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
 
-      addItem: (product, quantity = 1) => {
+      addItem: (product, quantity = 1, selectedColor) => {
         set((state) => {
-          const existingItem = state.items.find((item) => item.productId === product.id);
+          const existingItem = state.items.find(
+            (item) => item.productId === product.id && 
+            ((!selectedColor && !item.selectedColor) || (selectedColor?.id === item.selectedColor?.id))
+          );
 
           if (existingItem) {
             return {
               items: state.items.map((item) =>
-                item.productId === product.id
+                item.productId === product.id &&
+                ((!selectedColor && !item.selectedColor) || (selectedColor?.id === item.selectedColor?.id))
                   ? { ...item, quantity: item.quantity + quantity }
                   : item
               ),
@@ -32,27 +36,34 @@ export const useCartStore = create<CartState>()(
           }
 
           return {
-            items: [...state.items, { productId: product.id, product, quantity }],
+            items: [...state.items, { productId: product.id, product, quantity, selectedColor }],
           };
         });
       },
 
-      removeItem: (productId) => {
+      removeItem: (productId, colorId) => {
         set((state) => ({
-          items: state.items.filter((item) => item.productId !== productId),
+          items: state.items.filter((item) => {
+            if (item.productId !== productId) return true;
+            if (!colorId) return false;
+            return item.selectedColor?.id !== colorId;
+          }),
         }));
       },
 
-      updateQuantity: (productId, quantity) => {
+      updateQuantity: (productId, quantity, colorId) => {
         if (quantity <= 0) {
-          get().removeItem(productId);
+          get().removeItem(productId, colorId);
           return;
         }
 
         set((state) => ({
-          items: state.items.map((item) =>
-            item.productId === productId ? { ...item, quantity } : item
-          ),
+          items: state.items.map((item) => {
+            if (item.productId !== productId) return item;
+            if (colorId && item.selectedColor?.id !== colorId) return item;
+            if (!colorId && item.selectedColor) return item;
+            return { ...item, quantity };
+          }),
         }));
       },
 

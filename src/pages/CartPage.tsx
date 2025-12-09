@@ -86,7 +86,7 @@ export function CartPage() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => removeItem(item.productId)}
+                              onClick={() => removeItem(item.productId, item.selectedColor?.id)}
                               className="hover:bg-destructive/10 hover:text-destructive rounded-full"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -95,6 +95,18 @@ export function CartPage() {
                           <p className="mt-2 text-sm text-muted-foreground">
                             {formatCurrency(item.product.price)} each
                           </p>
+                          {item.selectedColor && (
+                            <div className="mt-3 flex items-center gap-2">
+                              <div
+                                className="h-4 w-4 rounded-full border border-gray-300"
+                                style={{ backgroundColor: item.selectedColor.hexCode }}
+                                title={item.selectedColor.hexCode}
+                              />
+                              <span className="text-sm font-medium text-muted-foreground">
+                                {item.selectedColor.name}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
                         <div className="mt-4 flex items-center justify-between">
@@ -103,7 +115,7 @@ export function CartPage() {
                               variant="ghost"
                               size="sm"
                               className="rounded-none px-4 hover:bg-muted"
-                              onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                              onClick={() => updateQuantity(item.productId, item.quantity - 1, item.selectedColor?.id)}
                               disabled={item.quantity <= 1}
                             >
                               −
@@ -115,7 +127,7 @@ export function CartPage() {
                               variant="ghost"
                               size="sm"
                               className="rounded-none px-4 hover:bg-muted"
-                              onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                              onClick={() => updateQuantity(item.productId, item.quantity + 1, item.selectedColor?.id)}
                               disabled={item.quantity >= item.product.stock}
                             >
                               +
