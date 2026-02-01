@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Heart, ShoppingCart, ArrowLeft, Star, Sparkles, Package, Shield, Truck, ChevronDown, ChevronUp } from 'lucide-react';
@@ -20,6 +20,11 @@ export function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [expandedSection, setExpandedSection] = useState<string | null>('description');
   const [selectedColor, setSelectedColor] = useState<ColorVariant | null>(null);
+
+  // Scroll to top when component mounts or product ID changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
   
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();

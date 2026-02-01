@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, ShoppingBag, Heart, Star, Sparkles, Quote, Instagram } from 'lucide-react';
+import { ArrowRight, ShoppingBag, Heart, Star, Sparkles, Quote, Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,10 +12,12 @@ import { useWishlistStore } from '@/store/wishlistStore';
 import { formatCurrency, convertGoogleDriveUrl } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
 import { toast } from 'sonner';
+import { useRef } from 'react';
 
 export function HomePage() {
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+  const categoriesScrollRef = useRef<HTMLDivElement>(null);
 
   const { data: productsData, isLoading: productsLoading } = useQuery({
     queryKey: ['products', 'featured'],
@@ -42,6 +44,20 @@ export function HomePage() {
     } else {
       addToWishlist(productId);
       toast.success('Added to wishlist');
+    }
+  };
+
+  const scrollCategories = (direction: 'left' | 'right') => {
+    if (categoriesScrollRef.current) {
+      const scrollAmount = 300;
+      const newScrollLeft = direction === 'left' 
+        ? categoriesScrollRef.current.scrollLeft - scrollAmount
+        : categoriesScrollRef.current.scrollLeft + scrollAmount;
+      
+      categoriesScrollRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -112,37 +128,62 @@ export function HomePage() {
               <h2 className="text-4xl font-bold mb-4 font-serif">Shop by Category</h2>
               <p className="text-muted-foreground text-lg">Explore our handcrafted collections</p>
             </div>
-            <div className="grid grid-cols-2 gap-4 md:gap-6 md:grid-cols-4">
-              {categories.filter(cat => cat.isActive).slice(0, 4).map((category) => (
-                <Link
-                  key={category.id}
-                  to={`${ROUTES.PRODUCTS}?category=${category.id}`}
-                  className="group"
-                >
-                  <Card className="overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-soft border-0 bg-gradient-to-b from-white to-muted/30">
-                    <div className="aspect-square bg-muted/50 flex items-center justify-center overflow-hidden relative">
-                      {category.image ? (
-                        <>
-                          <img
-                            src={convertGoogleDriveUrl(category.image)}
-                            alt={category.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </>
-                      ) : (
-                        <ShoppingBag className="h-16 w-16 text-primary/60 group-hover:text-primary transition-colors" />
+            <div className="relative">
+              {/* Left Arrow */}
+              <button
+                onClick={() => scrollCategories('left')}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white -ml-4 md:-ml-6"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+
+              {/* Scrollable Categories Container */}
+              <div
+                ref={categoriesScrollRef}
+                className="flex gap-8 md:gap-10 overflow-x-auto scrollbar-hide px-8 md:px-12 scroll-smooth"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {categories.filter(cat => cat.isActive).map((category) => (
+                  <Link
+                    key={category.id}
+                    to={`${ROUTES.PRODUCTS}?category=${category.id}`}
+                    className="group flex flex-col items-center flex-shrink-0"
+                  >
+                    <div className="relative mb-4 transition-all duration-300 hover:-translate-y-2">
+                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-full bg-muted/50 flex items-center justify-center overflow-hidden relative shadow-lg group-hover:shadow-xl transition-shadow duration-300 border-4 border-white">
+                        {category.image ? (
+                          <>
+                            <img
+                              src={convertGoogleDriveUrl(category.image)}
+                              alt={category.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          </>
+                        ) : (
+                          <ShoppingBag className="h-16 w-16 text-primary/60 group-hover:text-primary transition-colors" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <h3 className="font-semibold text-base md:text-lg group-hover:text-primary transition-colors">{category.name}</h3>
+                      {category.description && (
+                        <p className="text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2 max-w-[200px]">{category.description}</p>
                       )}
                     </div>
-                    <CardContent className="p-4 text-center bg-white">
-                      <h3 className="font-semibold text-base group-hover:text-primary transition-colors">{category.name}</h3>
-                      {category.description && (
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{category.description}</p>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Right Arrow */}
+              <button
+                onClick={() => scrollCategories('right')}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white -mr-4 md:-mr-6"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
             </div>
           </div>
         </section>

@@ -111,8 +111,11 @@ export function CategoriesManagement() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const imageUrl = `${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000'}${response.data.url}`;
-      
+      const rawUrl = response.data.url as string;
+      const imageUrl = /^https?:\/\//i.test(rawUrl)
+        ? rawUrl
+        : `${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000'}${rawUrl}`;
+
       setUploadedImage(imageUrl);
       toast.success('Image uploaded successfully');
     } catch (error) {
