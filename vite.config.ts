@@ -39,19 +39,8 @@ export default defineConfig({
     },
     // Increase chunk size limit to reduce fragmentation
     chunkSizeWarningLimit: 1000,
-    // Minify with aggressive compression
-    minify: 'terser',
-    terserOptions: {
-      ecma: 2020,
-      compress: {
-        drop_console: true,
-        passes: 2,
-        unused: true,
-      } as any,
-      format: {
-        comments: false,
-      },
-    } as any,
+    // Use esbuild for minification (built-in, faster than terser)
+    minify: 'esbuild',
     // Optimize module preload
     modulePreload: {
       polyfill: false,
