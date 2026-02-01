@@ -16,30 +16,43 @@ export function AnimatedContainer({
 }: AnimatedContainerProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            setIsVisible(true);
-          }, delay);
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '50px',
-      }
-    );
+    const element = ref.current;
+    if (!element) return;
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    // Use requestIdleCallback to defer non-critical intersection observer setup
+    const idleId = requestIdleCallback(() => {
+      observerRef.current = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            // Use requestAnimationFrame to batch state updates
+            timeoutRef.current = setTimeout(() => {
+              setIsVisible(true);
+              if (observerRef.current && element) {
+                observerRef.current.unobserve(element);
+              }
+            }, delay);
+          }
+        },
+        {
+          threshold: 0.1,
+          rootMargin: '50px',
+        }
+      );
+
+      observerRef.current.observe(element);
+    });
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      cancelIdleCallback(idleId);
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
     };
   }, [delay]);

@@ -48,17 +48,23 @@ export function HomePage() {
   };
 
   const scrollCategories = (direction: 'left' | 'right') => {
-    if (categoriesScrollRef.current) {
+    const element = categoriesScrollRef.current;
+    if (!element) return;
+    
+    // Use requestAnimationFrame to batch DOM reads and writes
+    requestAnimationFrame(() => {
       const scrollAmount = 300;
+      const currentScroll = element.scrollLeft;
       const newScrollLeft = direction === 'left' 
-        ? categoriesScrollRef.current.scrollLeft - scrollAmount
-        : categoriesScrollRef.current.scrollLeft + scrollAmount;
+        ? currentScroll - scrollAmount
+        : currentScroll + scrollAmount;
       
-      categoriesScrollRef.current.scrollTo({
+      // Perform all writes in the next frame
+      element.scrollTo({
         left: newScrollLeft,
         behavior: 'smooth'
       });
-    }
+    });
   };
 
   const testimonials = [
