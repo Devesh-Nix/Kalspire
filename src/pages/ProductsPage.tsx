@@ -154,16 +154,16 @@ export function ProductsPage() {
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6 flex items-center justify-between gap-3">
+        <div className="mb-8 flex items-center justify-between gap-3 animate-fade-in-down">
           <div>
-            <h1 className="text-3xl sm:text-5xl font-bold font-serif">All Products</h1>
-            <p className="text-muted-foreground text-sm sm:text-lg">
-              {totalProducts || 0} handcrafted treasures available
+            <h1 className="text-4xl sm:text-6xl font-bold font-serif gradient-text mb-2">All Products</h1>
+            <p className="text-muted-foreground text-base sm:text-xl font-medium">
+              <span className="text-primary font-bold">{totalProducts || 0}</span> handcrafted treasures available
             </p>
           </div>
           <Button
             variant="outline"
-            className="rounded-full gap-2 lg:hidden"
+            className="rounded-full gap-2 lg:hidden glass hover:shadow-glow hover:scale-110 transition-all duration-300"
             onClick={() => setMobileFiltersOpen((o) => !o)}
             aria-expanded={mobileFiltersOpen}
             aria-controls="mobile-filters"
@@ -174,13 +174,15 @@ export function ProductsPage() {
         </div>
 
         <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Filters Sidebar */}
-          <aside className="w-full lg:w-72 shrink-0 relative">
-            <Card className={`border-0 shadow-sm bg-white ${mobileFiltersOpen ? 'z-50' : 'hidden'} lg:block sticky top-24`} id="mobile-filters">
+          {/* Filters Sidebar - Enhanced */}
+          <aside className="w-full lg:w-72 shrink-0 relative animate-slide-in-left">
+            <Card className={`border-0 shadow-soft glass backdrop-blur-md bg-white/80 ${mobileFiltersOpen ? 'z-50' : 'hidden'} lg:block sticky top-24 hover:shadow-glow transition-all duration-500`} id="mobile-filters">
               <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-6">
-                  <Filter className="h-5 w-5 text-primary" />
-                  <h2 className="font-semibold text-lg font-serif">Filters</h2>
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-2 rounded-full bg-primary/10">
+                    <Filter className="h-5 w-5 text-primary" />
+                  </div>
+                  <h2 className="font-bold text-xl font-serif">Filters</h2>
                 </div>
 
                 <div className="space-y-6">
@@ -273,54 +275,57 @@ export function ProductsPage() {
           {/* Products Grid */}
           <div className="flex-1">
             {isLoading ? (
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="animate-pulse border-0">
-                    <div className="aspect-square bg-muted rounded-t-lg" />
+                  <Card key={i} className="border-0 overflow-hidden shadow-soft">
+                    <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 shimmer" />
                     <CardContent className="p-4">
-                      <div className="h-4 bg-muted rounded mb-2" />
-                      <div className="h-6 bg-muted rounded" />
+                      <div className="h-4 bg-muted rounded mb-2 shimmer" />
+                      <div className="h-6 bg-muted rounded shimmer" />
                     </CardContent>
                   </Card>
                 ))}
               </div>
             ) : productsData && productsData.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {productsData.map((product) => (
-                  <Card key={product.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-soft transition-all duration-300 hover:-translate-y-1 bg-white">
+                <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {productsData.map((product, index) => (
+                  <Card key={product.id} className="group overflow-hidden border-0 shadow-soft hover:shadow-glow-lg transition-all duration-500 hover:-translate-y-3 bg-white backdrop-blur-sm animate-scale-in hover:rotate-1" style={{ animationDelay: `${(index % 9) * 80}ms` }}>
                     <Link to={`/products/${product.id}`}>
-                      <div className="aspect-square overflow-hidden bg-muted/30 relative">
+                      <div className="aspect-square overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10 relative">
                         {product.images?.[0] ? (
+                          <>
                           <img
                             src={convertGoogleDriveUrl(product.images[0])}
                             alt={product.name}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-3"
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          </>
                         ) : (
                           <div className="h-full w-full flex items-center justify-center">
                             <ShoppingBag className="h-16 w-16 text-muted-foreground" />
                           </div>
                         )}
                         
-                        {/* Handmade Badge */}
-                        <Badge className="absolute top-3 left-3 bg-secondary text-secondary-foreground border-0 shadow-sm">
-                          <Sparkles className="h-3 w-3 mr-1" />
+                        {/* Enhanced Handmade Badge */}
+                        <Badge className="absolute top-3 left-3 glass border-0 shadow-soft backdrop-blur-md group-hover:scale-110 transition-transform duration-300">
+                          <Sparkles className="h-3 w-3 mr-1 animate-pulse" />
                           Handmade
                         </Badge>
 
-                        {/* Wishlist Button */}
+                        {/* Enhanced Wishlist Button */}
                         <Button
                           variant={isInWishlist(product.id) ? "default" : "secondary"}
                           size="icon"
-                          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md rounded-full h-9 w-9"
+                          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-glow rounded-full h-10 w-10 hover:scale-110"
                           onClick={(e) => handleToggleWishlist(e, product.id)}
                         >
-                          <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                          <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-current animate-pulse' : ''}`} />
                         </Button>
 
-                        {/* Quick Add Overlay */}
-                        <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                        {/* Enhanced Quick Add Overlay */}
+                        <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
                           <Button
                             className="w-full rounded-full"
                             size="sm"
@@ -338,24 +343,24 @@ export function ProductsPage() {
                     </Link>
                     <CardContent className="p-4">
                       <Link to={`/products/${product.id}`}>
-                        {/* Rating Stars */}
+                        {/* Enhanced Rating Stars */}
                         <div className="flex items-center gap-1 mb-2">
                           {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-3 w-3 fill-primary text-primary" />
+                            <Star key={i} className="h-3.5 w-3.5 fill-primary text-primary group-hover:scale-110 transition-transform" style={{ transitionDelay: `${i * 50}ms` }} />
                           ))}
-                          <span className="text-xs text-muted-foreground ml-1">(12)</span>
+                          <span className="text-xs text-muted-foreground ml-1 font-medium">(12)</span>
                         </div>
                         
-                        <h3 className="font-semibold line-clamp-1 hover:text-primary transition-colors mb-1">
+                        <h3 className="font-bold text-base line-clamp-1 hover:text-primary transition-colors mb-2 group-hover:scale-105 origin-left duration-300">
                           {product.name}
                         </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                        <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
                           {product.description}
                         </p>
                       </Link>
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="text-lg font-bold text-primary">{formatCurrency(product.price)}</span>
+                          <span className="text-xl font-bold text-primary group-hover:scale-110 inline-block transition-transform">{formatCurrency(product.price)}</span>
                           {product.originalPrice && (
                             <span className="ml-2 text-sm text-muted-foreground line-through">
                               {formatCurrency(product.originalPrice)}
@@ -363,9 +368,9 @@ export function ProductsPage() {
                           )}
                         </div>
                         {product.stock === 0 ? (
-                          <Badge variant="destructive" className="text-xs">Out of Stock</Badge>
+                          <Badge variant="destructive" className="text-xs animate-pulse">Out of Stock</Badge>
                         ) : product.stock < 10 ? (
-                          <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px ml-1">Only {product.stock} left</Badge>
+                          <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px ml-1 animate-pulse">Only {product.stock} left</Badge>
                         ) : null}
                       </div>
                     </CardContent>
@@ -374,27 +379,29 @@ export function ProductsPage() {
                 </div>
 
                 {/* Infinite Scroll Trigger & Loading Indicator */}
-                <div ref={observerTarget} className="flex justify-center py-8">
+                <div ref={observerTarget} className="flex justify-center py-12">
                   {isFetchingNextPage ? (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                      <span>Loading more products...</span>
+                    <div className="flex items-center gap-3 text-muted-foreground animate-fade-in">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary shadow-glow"></div>
+                      <span className="text-lg font-medium">Loading more products...</span>
                     </div>
                   ) : hasNextPage ? (
-                    <div className="text-sm text-muted-foreground">Scroll for more</div>
+                    <div className="text-base text-muted-foreground font-medium">Scroll for more ✨</div>
                   ) : (
-                    <div className="text-sm text-muted-foreground">
-                      You've reached the end • {totalProducts} products total
+                    <div className="text-base text-muted-foreground font-medium">
+                      You've reached the end • <span className="text-primary font-bold">{totalProducts}</span> products total 🎉
                     </div>
                   )}
                 </div>
               </>
             ) : (
-              <div className="text-center py-16">
-                <ShoppingBag className="h-20 w-20 mx-auto text-muted-foreground/50 mb-4" />
-                <h3 className="text-xl font-semibold mb-2 font-serif">No products found</h3>
-                <p className="text-muted-foreground mb-6">Try adjusting your filters or browse all categories</p>
-                <Button onClick={() => handleCategoryChange(null)} variant="outline" className="rounded-full">
+              <div className="text-center py-24 animate-fade-in-up">
+                <div className="inline-block p-6 rounded-full bg-muted/30 mb-6 animate-bounce-smooth">
+                  <ShoppingBag className="h-20 w-20 mx-auto text-muted-foreground/50" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 font-serif">No products found</h3>
+                <p className="text-muted-foreground text-lg mb-8">Try adjusting your filters or browse all categories</p>
+                <Button onClick={() => handleCategoryChange(null)} variant="outline" className="rounded-full hover:shadow-glow hover:scale-110 transition-all duration-300 px-8 py-6 text-base">
                   View All Products
                 </Button>
               </div>
