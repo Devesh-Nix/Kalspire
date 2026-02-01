@@ -48,17 +48,23 @@ export function HomePage() {
   };
 
   const scrollCategories = (direction: 'left' | 'right') => {
-    if (categoriesScrollRef.current) {
+    const element = categoriesScrollRef.current;
+    if (!element) return;
+    
+    // Use requestAnimationFrame to batch DOM reads and writes
+    requestAnimationFrame(() => {
       const scrollAmount = 300;
+      const currentScroll = element.scrollLeft;
       const newScrollLeft = direction === 'left' 
-        ? categoriesScrollRef.current.scrollLeft - scrollAmount
-        : categoriesScrollRef.current.scrollLeft + scrollAmount;
+        ? currentScroll - scrollAmount
+        : currentScroll + scrollAmount;
       
-      categoriesScrollRef.current.scrollTo({
+      // Perform all writes in the next frame
+      element.scrollTo({
         left: newScrollLeft,
         behavior: 'smooth'
       });
-    }
+    });
   };
 
   const testimonials = [
@@ -81,58 +87,77 @@ export function HomePage() {
 
   return (
     <MainLayout>
-      {/* Hero Section - Elegant Boutique Style */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/10 py-16 sm:py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(237,137,107,0.1),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(145,160,130,0.1),transparent_50%)]"></div>
+      {/* Hero Section - Mesmerizing with Parallax & Animations */}
+      <section className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/10 py-20 sm:py-28 lg:py-36 overflow-hidden">
+        {/* Animated Background Orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
+        </div>
+        
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(237,137,107,0.15),transparent_50%)] animate-pulse-slow"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(145,160,130,0.15),transparent_50%)] animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <Badge className="mb-6 px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground border-0 shadow-sm">
-              <Sparkles className="h-3 w-3 mr-2 inline" />
+          <div className="max-w-4xl mx-auto text-center">
+            <Badge className=" -mt-8 mb-6 px-6 py-2.5 text-sm font-medium glass border-0 shadow-glow animate-fade-in-down backdrop-blur-md">
+              <Sparkles className="h-4 w-4 mr-2 inline animate-pulse" />
               Handcrafted with Love
             </Badge>
             
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 font-serif text-foreground">
-              Kalspire
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight mb-8 font-serif text-foreground animate-fade-in-up">
+              <span className="inline-block hover:scale-110 transition-transform duration-300">K</span>
+              <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '50ms' }}>a</span>
+              <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '100ms' }}>l</span>
+              <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '150ms' }}>s</span>
+              <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '200ms' }}>p</span>
+              <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '250ms' }}>i</span>
+              <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '300ms' }}>r</span>
+              <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '350ms' }}>e</span>
             </h1>
-            <p className="text-xl sm:text-2xl text-primary font-medium mb-4">
+            <p className="text-2xl sm:text-3xl gradient-text font-semibold mb-6 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
               Artisan Crochet & Resin Creations
             </p>
-            <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '400ms' }}>
               Discover unique, handmade treasures crafted with passion. Each piece tells a story of creativity, 
               care, and artisan excellence.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '600ms' }}>
               <Link to={ROUTES.PRODUCTS}>
-                <Button size="lg" className="gap-2 px-8 py-6 text-base rounded-full shadow-lg hover:shadow-xl">
-                  Shop Crochet Collection <ArrowRight className="h-5 w-5" />
+                <Button size="lg" className="group gap-2 px-10 py-7 text-lg rounded-full shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:scale-105">
+                  Shop Crochet Collection 
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link to={ROUTES.PRODUCTS}>
-                <Button size="lg" variant="outline" className="gap-2 px-8 py-6 text-base rounded-full border-2">
+                <Button size="lg" variant="outline" className="gap-2 px-10 py-7 text-lg rounded-full border-2 hover:border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105">
                   Explore All Products
                 </Button>
               </Link>
             </div>
           </div>
         </div>
+
+        {/* Decorative Elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
       </section>
 
-      {/* Categories Section */}
+      {/* Categories Section - Enhanced with 3D Effects */}
       {!categoriesLoading && categories && categories.length > 0 && (
-        <section className="py-20 bg-white">
+        <section className="py-12 pt-24 bg-gradient-to-b from-white to-muted/20 overflow-x-hidden">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 font-serif">Shop by Category</h2>
-              <p className="text-muted-foreground text-lg">Explore our handcrafted collections</p>
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-5xl font-bold mb-4 font-serif">Shop by Category</h2>
+              <p className="text-muted-foreground text-xl">Explore our handcrafted collections</p>
             </div>
-            <div className="relative">
-              {/* Left Arrow */}
+            <div className="relative pb-8">
+              {/* Left Arrow - Enhanced */}
               <button
                 onClick={() => scrollCategories('left')}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white -ml-4 md:-ml-6"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 glass rounded-full p-4 shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:bg-primary hover:text-white hover:scale-110 -ml-4 md:-ml-6"
                 aria-label="Scroll left"
               >
                 <ChevronLeft className="h-6 w-6" />
@@ -141,45 +166,46 @@ export function HomePage() {
               {/* Scrollable Categories Container */}
               <div
                 ref={categoriesScrollRef}
-                className="flex gap-8 md:gap-10 overflow-x-auto scrollbar-hide px-8 md:px-12 scroll-smooth"
+                className="flex gap-10 md:gap-12 overflow-x-auto scrollbar-hide px-8 md:px-12 scroll-smooth"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                {categories.filter(cat => cat.isActive).map((category) => (
+                {categories.filter(cat => cat.isActive).map((category, index) => (
                   <Link
                     key={category.id}
                     to={`${ROUTES.PRODUCTS}?category=${category.id}`}
-                    className="group flex flex-col items-center flex-shrink-0"
+                    className="group flex flex-col items-center flex-shrink-0 animate-scale-in pt-2"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="relative mb-4 transition-all duration-300 hover:-translate-y-2">
-                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-full bg-muted/50 flex items-center justify-center overflow-hidden relative shadow-lg group-hover:shadow-xl transition-shadow duration-300 border-4 border-white">
+                    <div className="relative mb-6 transition-all duration-500 hover:-translate-y-2">
+                      <div className="w-44 h-44 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center overflow-hidden relative shadow-soft group-hover:shadow-glow-lg transition-all duration-500 border-4 border-white group-hover:border-primary/30 group-hover:rotate-6">
                         {category.image ? (
                           <>
                             <img
                               src={convertGoogleDriveUrl(category.image)}
                               alt={category.name}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           </>
                         ) : (
-                          <ShoppingBag className="h-16 w-16 text-primary/60 group-hover:text-primary transition-colors" />
+                          <ShoppingBag className="h-20 w-20 text-primary/60 group-hover:text-primary transition-colors group-hover:scale-110 duration-300" />
                         )}
                       </div>
                     </div>
                     <div className="text-center">
-                      <h3 className="font-semibold text-base md:text-lg group-hover:text-primary transition-colors">{category.name}</h3>
+                      <h3 className="font-bold text-lg md:text-xl group-hover:text-primary transition-colors duration-300 group-hover:scale-110 inline-block">{category.name}</h3>
                       {category.description && (
-                        <p className="text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2 max-w-[200px]">{category.description}</p>
+                        <p className="text-sm md:text-base text-muted-foreground mt-2 line-clamp-2 max-w-[220px]">{category.description}</p>
                       )}
                     </div>
                   </Link>
                 ))}
               </div>
 
-              {/* Right Arrow */}
+              {/* Right Arrow - Enhanced */}
               <button
                 onClick={() => scrollCategories('right')}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white -mr-4 md:-mr-6"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 glass rounded-full p-4 shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:bg-primary hover:text-white hover:scale-110 -mr-4 md:-mr-6"
                 aria-label="Scroll right"
               >
                 <ChevronRight className="h-6 w-6" />
@@ -189,17 +215,24 @@ export function HomePage() {
         </section>
       )}
 
-      {/* Featured Products Section */}
-      <section className="py-20 bg-gradient-to-b from-muted/30 to-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-12 gap-4">
-            <div>
-              <h2 className="text-4xl font-bold font-serif mb-2">Featured Crochet Collection</h2>
-              <p className="text-muted-foreground">Handpicked favorites crafted with care</p>
+      {/* Featured Products Section - Mesmerizing Cards */}
+      <section className="py-24 relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-white to-muted/20"></div>
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-16 gap-4">
+            <div className="animate-fade-in-up">
+              <h2 className="text-5xl font-bold font-serif mb-3">Featured Collection</h2>
+              <p className="text-muted-foreground text-lg">Handpicked favorites crafted with care</p>
             </div>
-            <Link to={ROUTES.PRODUCTS}>
-              <Button variant="outline" size="lg" className="gap-2 rounded-full">
-                View All Products <ArrowRight className="h-4 w-4" />
+            <Link to={ROUTES.PRODUCTS} className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+              <Button variant="outline" size="lg" className="gap-2 rounded-full hover:shadow-glow hover:scale-105 transition-all duration-300">
+                View All Products <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
           </div>
@@ -207,53 +240,61 @@ export function HomePage() {
           {productsLoading ? (
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[...Array(4)].map((_, i) => (
-                <Card key={i} className="animate-pulse border-0">
-                  <div className="aspect-square bg-muted rounded-t-lg" />
+                <Card key={i} className="animate-pulse border-0 overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 shimmer" />
                   <CardContent className="p-4">
-                    <div className="h-4 bg-muted rounded mb-2" />
-                    <div className="h-6 bg-muted rounded" />
+                    <div className="h-4 bg-muted rounded mb-2 shimmer" />
+                    <div className="h-6 bg-muted rounded shimmer" />
                   </CardContent>
                 </Card>
               ))}
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {productsData?.products?.slice(0, 8).map((product) => (
-                <Card key={product.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-soft transition-all duration-300 hover:-translate-y-1 bg-white">
+              {productsData?.products?.slice(0, 8).map((product, index) => (
+                <Card 
+                  key={product.id} 
+                  className="group overflow-hidden border-0 shadow-soft hover:shadow-glow-lg transition-all duration-500 hover:-translate-y-2 bg-white backdrop-blur-sm animate-scale-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
                   <Link to={`/products/${product.id}`}>
-                    <div className="aspect-square overflow-hidden bg-muted/30 relative">
+                    <div className="aspect-square overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10 relative">
                       {product.images?.[0] ? (
-                        <img
-                          src={convertGoogleDriveUrl(product.images[0])}
-                          alt={product.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
+                        <>
+                          <img
+                            src={convertGoogleDriveUrl(product.images[0])}
+                            alt={product.name}
+                            className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-2"
+                          />
+                          {/* Gradient overlay on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </>
                       ) : (
                         <div className="h-full w-full flex items-center justify-center">
-                          <ShoppingBag className="h-16 w-16 text-muted-foreground" />
+                          <ShoppingBag className="h-16 w-16 text-muted-foreground group-hover:scale-110 transition-transform duration-300" />
                         </div>
                       )}
                       
-                      {/* Handmade Badge */}
-                      <Badge className="absolute top-3 left-3 bg-secondary text-secondary-foreground border-0 shadow-sm">
-                        <Sparkles className="h-3 w-3 mr-1" />
+                      {/* Enhanced Handmade Badge */}
+                      <Badge className="absolute top-3 left-3 glass border-0 shadow-soft backdrop-blur-md group-hover:scale-110 transition-transform duration-300">
+                        <Sparkles className="h-3 w-3 mr-1 animate-pulse" />
                         Handmade
                       </Badge>
 
-                      {/* Wishlist Button - Enhanced */}
+                      {/* Enhanced Wishlist Button */}
                       <Button
                         variant={isInWishlist(product.id) ? "default" : "secondary"}
                         size="icon"
-                        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md rounded-full h-9 w-9"
+                        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-glow rounded-full h-10 w-10 hover:scale-110"
                         onClick={(e) => handleToggleWishlist(e, product.id)}
                       >
-                        <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                        <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-current animate-pulse' : ''}`} />
                       </Button>
 
-                      {/* Quick Add to Cart Overlay */}
-                      <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                      {/* Enhanced Quick Add Overlay */}
+                      <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
                         <Button
-                          className="w-full rounded-full"
+                          className="w-full rounded-full shadow-glow hover:scale-105 transition-transform duration-300"
                           size="sm"
                           onClick={(e) => {
                             e.preventDefault();
@@ -267,26 +308,26 @@ export function HomePage() {
                       </div>
                     </div>
                   </Link>
-                  <CardContent className="p-4">
+                  <CardContent className="p-5">
                     <Link to={`/products/${product.id}`}>
-                      {/* Rating Stars Preview */}
+                      {/* Enhanced Rating Stars */}
                       <div className="flex items-center gap-1 mb-2">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="h-3 w-3 fill-primary text-primary" />
+                          <Star key={i} className="h-3.5 w-3.5 fill-primary text-primary group-hover:scale-110 transition-transform" style={{ transitionDelay: `${i * 50}ms` }} />
                         ))}
-                        <span className="text-xs text-muted-foreground ml-1">(12)</span>
+                        <span className="text-xs text-muted-foreground ml-1 font-medium">(12)</span>
                       </div>
                       
-                      <h3 className="font-semibold line-clamp-1 hover:text-primary transition-colors mb-1">
+                      <h3 className="font-bold text-base line-clamp-1 hover:text-primary transition-colors mb-2 group-hover:scale-105 origin-left duration-300">
                         {product.name}
                       </h3>
-                      <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+                      <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
                         {product.description}
                       </p>
                     </Link>
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-lg font-bold text-primary">{formatCurrency(product.price)}</span>
+                        <span className="text-xl font-bold text-primary group-hover:scale-110 inline-block transition-transform">{formatCurrency(product.price)}</span>
                         {product.originalPrice && product.originalPrice > product.price && (
                           <span className="ml-2 text-sm text-muted-foreground line-through">
                             {formatCurrency(product.originalPrice)}
@@ -294,9 +335,9 @@ export function HomePage() {
                         )}
                       </div>
                       {product.stock === 0 ? (
-                        <Badge variant="destructive" className="text-xs">Out of Stock</Badge>
+                        <Badge variant="destructive" className="text-xs animate-pulse">Out of Stock</Badge>
                       ) : product.stock < 10 ? (
-                        <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px ml-1">Only {product.stock} left</Badge>
+                        <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px ml-1 animate-pulse">Only {product.stock} left</Badge>
                       ) : null}
                     </div>
                   </CardContent>
@@ -307,33 +348,39 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="text-center group">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                <Sparkles className="h-8 w-8 text-primary" />
+      {/* Features Section - Enhanced with Hover Effects */}
+      <section className="py-24 bg-gradient-to-b from-white to-muted/10 relative overflow-hidden">
+        {/* Decorative background */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-10 right-20 w-64 h-64 bg-secondary/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 left-20 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+            <div className="text-center group animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+              <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 group-hover:from-primary group-hover:to-primary/80 transition-all duration-500 shadow-soft group-hover:shadow-glow group-hover:scale-110 group-hover:rotate-6">
+                <Sparkles className="h-10 w-10 text-primary group-hover:text-white transition-colors duration-300" />
               </div>
-              <h3 className="font-semibold mb-3 text-lg font-serif">Handcrafted Quality</h3>
+              <h3 className="font-bold mb-4 text-xl font-serif group-hover:text-primary transition-colors duration-300">Handcrafted Quality</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Every piece is lovingly handmade with premium materials and attention to detail
               </p>
             </div>
-            <div className="text-center group">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-secondary/30 group-hover:bg-secondary/50 transition-colors">
-                <ShoppingBag className="h-8 w-8 text-secondary-foreground" />
+            <div className="text-center group animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+              <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-secondary/40 to-secondary/10 group-hover:from-secondary group-hover:to-secondary/80 transition-all duration-500 shadow-soft group-hover:shadow-glow group-hover:scale-110 group-hover:rotate-6">
+                <ShoppingBag className="h-10 w-10 text-secondary-foreground group-hover:text-white transition-colors duration-300" />
               </div>
-              <h3 className="font-semibold mb-3 text-lg font-serif">Fast Delivery</h3>
+              <h3 className="font-bold mb-4 text-xl font-serif group-hover:text-primary transition-colors duration-300">Fast Delivery</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Quick and reliable shipping to bring your handmade treasures to your doorstep
               </p>
             </div>
-            <div className="text-center group">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                <Heart className="h-8 w-8 text-accent" />
+            <div className="text-center group animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+              <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-accent/20 to-accent/5 group-hover:from-accent group-hover:to-accent/80 transition-all duration-500 shadow-soft group-hover:shadow-glow group-hover:scale-110 group-hover:rotate-6">
+                <Heart className="h-10 w-10 text-accent group-hover:text-white transition-colors duration-300" />
               </div>
-              <h3 className="font-semibold mb-3 text-lg font-serif">Made with Love</h3>
+              <h3 className="font-bold mb-4 text-xl font-serif group-hover:text-primary transition-colors duration-300">Made with Love</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Each creation carries the artisan's passion and dedication to craft
               </p>
@@ -342,26 +389,40 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Customer Testimonials */}
-      <section className="py-20 bg-gradient-to-b from-secondary/5 to-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 font-serif">What Our Customers Say</h2>
-            <p className="text-muted-foreground text-lg">Real reviews from happy customers</p>
+      {/* Customer Testimonials - Enhanced Cards */}
+      <section className="py-24 relative overflow-hidden">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 via-primary/5 to-white"></div>
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-72 h-72 bg-secondary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16 animate-fade-in-up">
+            <h2 className="text-5xl font-bold mb-4 font-serif">What Our Customers Say</h2>
+            <p className="text-muted-foreground text-xl">Real reviews from happy customers</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-sm hover:shadow-soft transition-all duration-300 bg-white">
-                <CardContent className="p-6">
-                  <Quote className="h-8 w-8 text-primary/20 mb-4" />
-                  <div className="flex gap-1 mb-4">
+              <Card 
+                key={index} 
+                className="border-0 shadow-soft hover:shadow-glow-lg transition-all duration-500 bg-white/80 backdrop-blur-sm hover:-translate-y-2 group animate-scale-in overflow-hidden relative"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                {/* Decorative gradient on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-secondary/0 group-hover:from-primary/5 group-hover:to-secondary/5 transition-all duration-500"></div>
+                
+                <CardContent className="p-8 relative z-10">
+                  <Quote className="h-10 w-10 text-primary/30 mb-6 group-hover:scale-110 group-hover:text-primary/50 transition-all duration-300" />
+                  <div className="flex gap-1 mb-6">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                      <Star key={i} className="h-5 w-5 fill-primary text-primary group-hover:scale-110 transition-transform" style={{ transitionDelay: `${i * 50}ms` }} />
                     ))}
                   </div>
-                  <p className="text-muted-foreground mb-4 leading-relaxed">{testimonial.text}</p>
-                  <p className="font-semibold text-foreground">— {testimonial.name}</p>
+                  <p className="text-muted-foreground mb-6 leading-relaxed text-base">{testimonial.text}</p>
+                  <p className="font-bold text-foreground text-lg group-hover:text-primary transition-colors duration-300">— {testimonial.name}</p>
                 </CardContent>
               </Card>
             ))}
@@ -369,22 +430,31 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Coming Soon - Resin Collection */}
-      <section className="py-20 bg-gradient-to-br from-accent/5 via-white to-accent/10">
-        <div className="container mx-auto px-4">
+      {/* Coming Soon - Resin Collection - Enhanced */}
+      <section className="py-24 relative overflow-hidden">
+        {/* Stunning gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-white to-accent/5"></div>
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 px-4 py-2 text-sm font-medium bg-accent text-accent-foreground">
+            <Badge className="mb-8 px-6 py-3 text-base font-semibold glass border-0 shadow-glow animate-pulse backdrop-blur-md">
               Coming Soon
             </Badge>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 font-serif">Resin Collection</h2>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+            <h2 className="text-5xl sm:text-6xl font-bold mb-8 font-serif animate-fade-in-up">
+              <span className="gradient-text">Resin Collection</span>
+            </h2>
+            <p className="text-xl text-muted-foreground mb-12 leading-relaxed animate-fade-in-up" style={{ animationDelay: '200ms' }}>
               Beautiful handcrafted resin keychains, coasters, and decorative pieces are on their way! 
               Stay tuned for unique designs that blend art and functionality.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '400ms' }}>
               <a href="https://www.instagram.com/_kalspire_/" target="_blank" rel="noreferrer">
-                <Button size="lg" variant="outline" className="gap-2 rounded-full border-2">
-                  <Instagram className="h-5 w-5" />
+                <Button size="lg" variant="outline" className="group gap-3 rounded-full border-2 hover:border-accent hover:bg-accent/10 hover:scale-105 transition-all duration-300 px-10 py-7 text-lg shadow-soft hover:shadow-glow">
+                  <Instagram className="h-6 w-6 group-hover:rotate-12 transition-transform duration-300" />
                   Follow on Instagram for Updates
                 </Button>
               </a>
@@ -393,19 +463,27 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Newsletter/Instagram Section */}
-      <section className="py-20 bg-foreground text-background">
-        <div className="container mx-auto px-4">
+      {/* Newsletter/Instagram Section - Dramatic Dark Section */}
+      <section className="py-24 bg-gradient-to-br from-foreground via-foreground/95 to-foreground text-background relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-background rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-background rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <Instagram className="h-12 w-12 mx-auto mb-6 opacity-90" />
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 font-serif">Join Our Artisan Community</h2>
-            <p className="text-background/80 mb-8 text-lg">
+            <div className="mb-8 inline-block animate-bounce-smooth">
+              <Instagram className="h-16 w-16 mx-auto opacity-90" />
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-6 font-serif animate-fade-in-up">Join Our Artisan Community</h2>
+            <p className="text-background/80 mb-12 text-xl leading-relaxed animate-fade-in-up" style={{ animationDelay: '200ms' }}>
               Follow us on Instagram for behind-the-scenes content, new arrivals, and special offers
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '400ms' }}>
               <a href="https://www.instagram.com/_kalspire_/" target="_blank" rel="noreferrer">
-                <Button size="lg" variant="secondary" className="gap-2 rounded-full px-8">
-                  <Instagram className="h-5 w-5" />
+                <Button size="lg" variant="secondary" className="group gap-3 rounded-full px-10 py-7 text-lg shadow-glow hover:shadow-glow-lg hover:scale-110 transition-all duration-300">
+                  <Instagram className="h-6 w-6 group-hover:rotate-12 transition-transform duration-300" />
                   @_kalspire_
                 </Button>
               </a>

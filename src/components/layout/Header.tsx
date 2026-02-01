@@ -43,82 +43,88 @@ export function Header() {
 
   return (
     <>
-      {/* Announcement Bar */}
-      <div className="bg-gradient-to-r from-primary via-primary/90 to-primary text-primary-foreground py-2.5 text-center text-sm font-medium">
-        <div className="container mx-auto px-4 flex items-center justify-center gap-2">
-          <Sparkles className="h-4 w-4" />
-          <span>Free Shipping on Orders Over ₹1999 | Handcrafted with Love ❤️</span>
+      {/* Announcement Bar - Enhanced with Animation */}
+      <div className="gradient-animate text-primary-foreground py-3 text-center text-sm font-medium overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+        <div className="container mx-auto px-4 flex items-center justify-center gap-2 relative z-10">
+          <Sparkles className="h-4 w-4 animate-pulse" />
+          <span className="font-semibold">Free Shipping on Orders Over ₹1999 | Handcrafted with Love ❤️</span>
         </div>
       </div>
 
-      {/* Main Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-sm">
+      {/* Main Header - Glassmorphism Enhanced */}
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 glass backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-soft">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between gap-4">
-            {/* Logo */}
+            {/* Logo - Enhanced with Hover Effect */}
             <Link to={ROUTES.HOME} className="flex items-center space-x-3 group flex-shrink-0">
               {/* Show emblem on mobile only */}
-              <img
-                src={kalspireMark}
-                alt="Kalspire"
-                className="h-10 w-10 rounded-lg shadow-md group-hover:shadow-lg transition-shadow sm:hidden"
-              />
+              <div className="relative">
+                <img
+                  src={kalspireMark}
+                  alt="Kalspire"
+                  className="h-11 w-11 rounded-xl shadow-soft group-hover:shadow-glow transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 sm:hidden"
+                />
+                <div className="absolute inset-0 bg-primary/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 sm:hidden"></div>
+              </div>
               {/* Show wordmark on tablet/desktop */}
-              <img
-                src={kalspireLogo}
-                alt="Kalspire Artisan Crochet & Resin"
-                className="hidden sm:block h-8 w-auto"
-              />
+              <div className="relative hidden sm:block">
+                <img
+                  src={kalspireLogo}
+                  alt="Kalspire Artisan Crochet & Resin"
+                  className="h-9 w-auto group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
             </Link>
 
-            {/* Search Bar - Desktop */}
+            {/* Search Bar - Desktop - Enhanced */}
             <div className="hidden md:flex flex-1 max-w-xl mx-8">
-              <form onSubmit={handleSearch} className="relative w-full">
-                <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <form onSubmit={handleSearch} className="relative w-full group">
+                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground pointer-events-none group-focus-within:text-primary transition-colors duration-300" />
                 <Input
                   type="search"
                   placeholder="Search handmade products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-11 rounded-full border-muted-foreground/20 focus:border-primary"
+                  className="pl-12 pr-4 h-11 rounded-full border-border/50 focus:border-primary/50 glass hover:shadow-soft focus:shadow-glow transition-all duration-300"
                 />
               </form>
             </div>
 
-            {/* Search Bar - Mobile (between logo and wishlist) */}
+            {/* Search Bar - Mobile - Enhanced */}
             <div className="md:hidden flex-1 mx-2">
-              <form onSubmit={handleSearch} className="relative w-full">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <form onSubmit={handleSearch} className="relative w-full group">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none group-focus-within:text-primary transition-colors duration-300" />
                 <Input
                   type="search"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-3 h-9 rounded-full border-muted-foreground/20 focus:border-primary text-sm"
+                  className="pl-9 pr-3 h-10 rounded-full border-border/50 focus:border-primary/50 text-sm glass hover:shadow-soft focus:shadow-glow transition-all duration-300"
                 />
               </form>
             </div>
 
-            {/* Navigation */}
+            {/* Navigation - Enhanced with Animations */}
             <nav className="flex items-center space-x-2 flex-shrink-0">
               {isAuthenticated ? (
                 <>
-                  <Link to={ROUTES.WISHLIST} className="relative">
-                    <Button variant="ghost" size="icon" className="relative rounded-full">
-                      <Heart className="h-5 w-5" />
+                  <Link to={ROUTES.WISHLIST} className="relative group">
+                    <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300">
+                      <Heart className="h-5 w-5 group-hover:fill-primary group-hover:text-primary transition-all duration-300" />
                       {wishlistCount > 0 && (
-                        <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary">
+                        <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary animate-pulse shadow-glow">
                           {wishlistCount}
                         </Badge>
                       )}
                     </Button>
                   </Link>
 
-                  <Link to={ROUTES.CART} className="relative">
-                    <Button variant="ghost" size="icon" className="relative rounded-full">
-                      <ShoppingCart className="h-5 w-5" />
+                  <Link to={ROUTES.CART} className="relative group">
+                    <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300">
+                      <ShoppingCart className="h-5 w-5 group-hover:text-primary transition-colors duration-300" />
                       {totalItems > 0 && (
-                        <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary">
+                        <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary animate-pulse shadow-glow">
                           {totalItems}
                         </Badge>
                       )}
@@ -127,11 +133,16 @@ export function Header() {
 
                   <div className="flex items-center space-x-2 ml-2">
                     <Link to={user?.role === 'admin' ? ROUTES.ADMIN.DASHBOARD : ROUTES.PROFILE}>
-                      <Button variant="ghost" size="icon" className="rounded-full">
-                        <User className="h-5 w-5" />
+                      <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300">
+                        <User className="h-5 w-5 hover:text-primary transition-colors duration-300" />
                       </Button>
                     </Link>
-                    <Button variant="outline" size="sm" onClick={handleLogout} className="rounded-full hidden sm:inline-flex">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleLogout} 
+                      className="rounded-full hidden sm:inline-flex hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all duration-300 hover:scale-105"
+                    >
                       Logout
                     </Button>
                   </div>
@@ -139,12 +150,14 @@ export function Header() {
               ) : (
                 <div className="flex items-center space-x-2">
                   <Link to={ROUTES.LOGIN}>
-                    <Button variant="ghost" size="sm" className="rounded-full">
+                    <Button variant="ghost" size="sm" className="rounded-full hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-105">
                       Login
                     </Button>
                   </Link>
                   <Link to={ROUTES.REGISTER}>
-                    <Button size="sm" className="rounded-full shadow-sm">Sign Up</Button>
+                    <Button size="sm" className="rounded-full shadow-soft hover:shadow-glow transition-all duration-300 hover:scale-105">
+                      Sign Up
+                    </Button>
                   </Link>
                 </div>
               )}
