@@ -101,8 +101,8 @@ export function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(145,160,130,0.15),transparent_50%)] animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className=" -mt-8 mb-6 px-6 py-2.5 text-sm font-medium glass border-0 shadow-glow animate-fade-in-down backdrop-blur-md">
+          <div className="max-w-4xl mx-auto text-center -mt-28">
+            <Badge className=" -mt-12 mb-6 px-6 py-2.5 text-sm font-medium border-0 shadow-glow animate-fade-in-down bg-primary/15 text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300 cursor-pointer">
               <Sparkles className="h-4 w-4 mr-2 inline animate-pulse" />
               Handcrafted with Love
             </Badge>
@@ -441,7 +441,7 @@ export function HomePage() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-8 px-6 py-3 text-base font-semibold glass border-0 shadow-glow animate-pulse backdrop-blur-md">
+            <Badge className="mb-8 px-6 py-3 text-base font-semibold border-0 shadow-glow  bg-accent/15 text-accent hover:bg-accent hover:text-white transition-colors duration-300 cursor-pointer">
               Coming Soon
             </Badge>
             <h2 className="text-5xl sm:text-6xl font-bold mb-8 font-serif animate-fade-in-up">

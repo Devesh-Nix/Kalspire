@@ -128,7 +128,10 @@ export function ProductsManagement() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const imageUrls = response.data.images.map((img: any) => img.url);
+      // Handle both response formats:
+      // Format 1 (Cloudinary - localhost): { url, publicId, width, height, bytes }
+      // Format 2 (Local/fallback - production): { filename, size }
+      const imageUrls = response.data.images.map((img: any) => img.url || img.filename);
       
       setUploadedImages(prev => [...prev, ...imageUrls]);
       toast.success(`${files.length} image(s) uploaded successfully`);
