@@ -72,7 +72,7 @@ export function Header() {
                 <img
                   src={kalspireLogo}
                   alt="Kalspire Artisan Crochet & Resin"
-                  className="h-9 w-auto group-hover:scale-105 transition-transform duration-300"
+                  className="h-12 w-auto group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
             </Link>
