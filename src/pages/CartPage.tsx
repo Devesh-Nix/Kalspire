@@ -59,6 +59,9 @@ export function CartPage() {
                               src={convertGoogleDriveUrl(item.product.images[0])}
                               alt={item.product.name}
                               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              onError={(e) => {
+                                e.currentTarget.src = 'https://via.placeholder.com/200x200?text=No+Image';
+                              }}
                             />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center">
@@ -177,7 +180,7 @@ export function CartPage() {
                       <span className="text-2xl font-bold text-primary font-serif">{formatCurrency(total)}</span>
                     </div>
                   </div>
-                  
+
                   {/* Trust Badges */}
                   <div className="border-t pt-4 space-y-3">
                     <div className="flex items-center gap-2 text-sm">

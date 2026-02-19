@@ -25,7 +25,7 @@ export function ProductDetailPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
-  
+
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
 
@@ -39,21 +39,19 @@ export function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    
+
     if (product.colorVariants && product.colorVariants.length > 0 && !selectedColor) {
       toast.error('Please select a color');
       return;
     }
-    
-    for (let i = 0; i < quantity; i++) {
-      addItem(product, 1, selectedColor || undefined);
-    }
+
+    addItem(product, quantity, selectedColor || undefined);
     toast.success(`Added ${quantity} item(s) to cart!`);
   };
 
   const handleToggleWishlist = () => {
     if (!product) return;
-    
+
     if (isWishlisted) {
       removeFromWishlist(product.id);
       toast.success('Removed from wishlist');
@@ -125,7 +123,7 @@ export function ProductDetailPage() {
                         className="h-full w-full object-cover cursor-zoom-in transition-transform duration-300 group-hover:scale-105"
                         onError={(e) => {
                           console.error('Image failed to load:', images[selectedImage]);
-                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.src = 'https://via.placeholder.com/600x600?text=Image+Not+Available';
                         }}
                       />
                       {/* Handmade Badge */}
@@ -141,7 +139,7 @@ export function ProductDetailPage() {
                   )}
                 </div>
               </Card>
-              
+
               {/* Thumbnail Gallery */}
               {images.length > 1 && (
                 <div className="grid grid-cols-4 gap-3">
@@ -149,11 +147,10 @@ export function ProductDetailPage() {
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === index 
-                          ? 'border-primary shadow-md scale-105' 
+                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${selectedImage === index
+                          ? 'border-primary shadow-md scale-105'
                           : 'border-transparent hover:border-muted-foreground/30'
-                      }`}
+                        }`}
                     >
                       <img
                         src={convertGoogleDriveUrl(image)}
@@ -184,7 +181,7 @@ export function ProductDetailPage() {
                     <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
                   </Button>
                 </div>
-                
+
                 {/* Rating */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex gap-1">
@@ -248,11 +245,10 @@ export function ProductDetailPage() {
                             key={color.id}
                             onClick={() => color.stock > 0 && setSelectedColor(color)}
                             disabled={color.stock === 0}
-                            className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
-                              selectedColor?.id === color.id
+                            className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${selectedColor?.id === color.id
                                 ? 'border-primary bg-primary/5 shadow-md'
                                 : 'border-gray-200 hover:border-primary'
-                            } ${color.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                              } ${color.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                           >
                             <div
                               className="h-6 w-6 rounded-full border-2 border-gray-300"
@@ -403,8 +399,8 @@ export function ProductDetailPage() {
                   {expandedSection === 'artisan' && (
                     <CardContent className="px-5 pb-5">
                       <p className="text-muted-foreground leading-relaxed">
-                        Each piece is lovingly handcrafted by skilled artisans who pour their creativity and 
-                        passion into every stitch. Your purchase supports local craftsmanship and helps keep 
+                        Each piece is lovingly handcrafted by skilled artisans who pour their creativity and
+                        passion into every stitch. Your purchase supports local craftsmanship and helps keep
                         traditional handmade art alive.
                       </p>
                     </CardContent>

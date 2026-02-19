@@ -2,8 +2,8 @@ import apiClient from './client';
 import type { Order } from '@/types';
 
 export const ordersApi = {
-  getAll: async (params?: { 
-    userId?: string; 
+  getAll: async (params?: {
+    userId?: string;
     status?: string;
     page?: number;
     limit?: number;
@@ -18,7 +18,7 @@ export const ordersApi = {
   },
 
   create: async (orderData: {
-    items: { productId: string; quantity: number }[];
+    items: { productId: string; quantity: number; selectedColor?: any }[];
     shippingAddress: any;
   }): Promise<Order> => {
     const { data } = await apiClient.post<Order>('/orders', orderData);
