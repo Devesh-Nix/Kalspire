@@ -298,7 +298,7 @@ export function ProductsPage() {
                           {product.images?.[0] ? (
                             <>
                               <img
-                                src={optimizeImageUrl(product.images[0], 500, 500)}
+                                src={optimizeImageUrl(product.images[0], 400, 400)}
                                 alt={product.name}
                                 className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-3"
                                 loading="lazy"

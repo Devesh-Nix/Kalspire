@@ -182,7 +182,7 @@ export function HomePage() {
                         {category.image ? (
                           <>
                             <img
-                              src={optimizeImageUrl(category.image, 400, 400)}
+                              src={optimizeImageUrl(category.image, 300, 300)}
                               alt={category.name}
                               className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                               loading="lazy"
@@ -241,12 +241,21 @@ export function HomePage() {
 
           {productsLoading ? (
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {[...Array(4)].map((_, i) => (
-                <Card key={i} className="animate-pulse border-0 overflow-hidden">
-                  <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 shimmer" />
-                  <CardContent className="p-4">
-                    <div className="h-4 bg-muted rounded mb-2 shimmer" />
-                    <div className="h-6 bg-muted rounded shimmer" />
+              {[...Array(8)].map((_, i) => (
+                <Card key={i} className="border-0 overflow-hidden bg-white/50">
+                  <div className="aspect-square bg-muted/20 shimmer" />
+                  <CardContent className="p-5">
+                    <div className="flex gap-1 mb-2">
+                      {[...Array(5)].map((_, j) => (
+                        <div key={j} className="h-3.5 w-3.5 rounded-full bg-muted/30 shimmer" />
+                      ))}
+                    </div>
+                    <div className="h-5 bg-muted/40 rounded w-3/4 mb-2 shimmer" />
+                    <div className="h-4 bg-muted/20 rounded w-full mb-3 shimmer" />
+                    <div className="flex justify-between items-center">
+                      <div className="h-7 bg-muted/40 rounded w-1/3 shimmer" />
+                      <div className="h-5 bg-muted/20 rounded w-1/4 shimmer" />
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -264,7 +273,7 @@ export function HomePage() {
                       {product.images?.[0] ? (
                         <>
                           <img
-                            src={optimizeImageUrl(product.images[0], 500, 500)}
+                            src={optimizeImageUrl(product.images[0], 400, 400)}
                             alt={product.name}
                             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-2"
                             loading="lazy"
