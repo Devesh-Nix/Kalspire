@@ -114,20 +114,20 @@ export function ProductDetailPage() {
             {/* Sticky Image Gallery */}
             <div className="lg:sticky lg:top-24 h-fit space-y-4">
               <Card className="overflow-hidden border-0 shadow-soft bg-white">
-                <div className="aspect-square bg-muted/30 relative group">
+                <div className="aspect-square bg-muted/20 relative group overflow-hidden rounded-2xl">
                   {images.length > 0 ? (
                     <>
                       <img
                         src={convertGoogleDriveUrl(images[selectedImage])}
                         alt={product.name}
-                        className="h-full w-full object-cover cursor-zoom-in transition-transform duration-300 group-hover:scale-105"
+                        className="h-full w-full object-cover cursor-zoom-in transition-all duration-700 group-hover:scale-110 animate-fade-in"
                         onError={(e) => {
                           console.error('Image failed to load:', images[selectedImage]);
                           e.currentTarget.src = 'https://via.placeholder.com/600x600?text=Image+Not+Available';
                         }}
                       />
                       {/* Handmade Badge */}
-                      <Badge className="absolute top-4 left-4 bg-secondary text-secondary-foreground border-0 shadow-lg">
+                      <Badge className="absolute top-4 left-4 glass border-0 shadow-glow animate-bounce-smooth">
                         <Sparkles className="h-3 w-3 mr-1" />
                         Handmade
                       </Badge>
@@ -148,8 +148,8 @@ export function ProductDetailPage() {
                       key={index}
                       onClick={() => setSelectedImage(index)}
                       className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${selectedImage === index
-                          ? 'border-primary shadow-md scale-105'
-                          : 'border-transparent hover:border-muted-foreground/30'
+                        ? 'border-primary shadow-md scale-105'
+                        : 'border-transparent hover:border-muted-foreground/30'
                         }`}
                     >
                       <img
@@ -217,17 +217,17 @@ export function ProductDetailPage() {
               </div>
 
               {/* Stock Status */}
-              <div>
+              <div className="flex flex-wrap gap-3">
                 {product.stock === 0 ? (
-                  <Badge variant="destructive" className="text-base px-4 py-2">Out of Stock</Badge>
+                  <Badge variant="destructive" className="text-base px-6 py-2.5 rounded-full shadow-soft animate-pulse">Out of Stock</Badge>
                 ) : product.stock < 10 ? (
-                  <Badge variant="secondary" className="text-base px-4 py-2 bg-amber-100 text-amber-800 border-amber-200">
+                  <Badge variant="secondary" className="text-base px-6 py-2.5 rounded-full bg-pink/20 text-primary border-pink/30 shadow-soft animate-bounce-smooth">
                     Only {product.stock} left in stock - Order soon!
                   </Badge>
                 ) : (
-                  <Badge variant="default" className="text-base px-4 py-2 bg-green-100 text-green-800 border-green-200">
+                  <Badge variant="default" className="text-base px-6 py-2.5 rounded-full bg-mint/30 text-accent border-mint/50 shadow-soft">
                     <Package className="h-4 w-4 mr-2" />
-                    In Stock
+                    In Stock & Ready to Ship
                   </Badge>
                 )}
               </div>
@@ -246,8 +246,8 @@ export function ProductDetailPage() {
                             onClick={() => color.stock > 0 && setSelectedColor(color)}
                             disabled={color.stock === 0}
                             className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${selectedColor?.id === color.id
-                                ? 'border-primary bg-primary/5 shadow-md'
-                                : 'border-gray-200 hover:border-primary'
+                              ? 'border-primary bg-primary/5 shadow-md'
+                              : 'border-gray-200 hover:border-primary'
                               } ${color.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                           >
                             <div

@@ -7,26 +7,41 @@
 @layer base {
   :root {
     /* Warm artisan color palette for crochet & resin marketplace */
-    --background: 40 30% 98%; /* Warm cream */
-    --foreground: 25 25% 15%; /* Deep brown */
-    --card: 0 0% 100%; /* Pure white for cards */
+    --background: 40 40% 98%;
+    /* Warmer cream */
+    --foreground: 25 25% 15%;
+    /* Deep brown */
+    --card: 0 0% 100%;
+    /* Pure white for cards */
     --card-foreground: 25 25% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 25 25% 15%;
-    --primary: 15 75% 62%; /* Warm terracotta/coral */
+    --primary: 15 85% 65%;
+    /* Softer coral */
     --primary-foreground: 0 0% 100%;
-    --secondary: 145 25% 85%; /* Soft sage green for crochet */
+    --secondary: 145 35% 90%;
+    /* Softer sage green */
     --secondary-foreground: 25 25% 15%;
-    --muted: 40 20% 95%; /* Light warm gray */
+    --muted: 40 30% 96%;
+    /* Lighter warm gray */
     --muted-foreground: 25 15% 45%;
-    --accent: 180 45% 45%; /* Teal for resin products */
+    --accent: 180 50% 50%;
+    /* Softer teal */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-    --border: 40 15% 88%; /* Soft warm border */
-    --input: 40 15% 92%;
-    --ring: 15 75% 62%;
-    --radius: 0.75rem; /* Increased for softer feel */
+    --border: 40 20% 90%;
+    /* Softer warm border */
+    --input: 40 20% 94%;
+    --ring: 15 85% 65%;
+    --radius: 1rem;
+    /* Highly rounded for "cute" feel */
+
+    /* New pastel tokens */
+    --lavender: 270 50% 94%;
+    --soft-pink: 340 60% 94%;
+    --mint: 160 40% 94%;
+    --sky: 200 50% 94%;
   }
 
   .dark {
@@ -36,19 +51,19 @@
     --card-foreground: 40 15% 92%;
     --popover: 25 18% 15%;
     --popover-foreground: 40 15% 92%;
-    --primary: 15 70% 58%;
+    --primary: 15 75% 62%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 145 20% 25%;
+    --secondary: 145 25% 30%;
     --secondary-foreground: 40 15% 92%;
-    --muted: 25 15% 20%;
+    --muted: 25 15% 18%;
     --muted-foreground: 40 10% 60%;
-    --accent: 180 40% 40%;
+    --accent: 180 45% 45%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 40 15% 92%;
-    --border: 25 15% 22%;
-    --input: 25 15% 22%;
-    --ring: 15 70% 58%;
+    --border: 25 15% 20%;
+    --input: 25 15% 20%;
+    --ring: 15 75% 62%;
   }
 }
 
@@ -56,12 +71,19 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Playfair Display', Georgia, serif;
     font-weight: 600;
   }
@@ -72,18 +94,27 @@
   .text-artisan {
     @apply text-primary;
   }
+
   .bg-artisan {
     @apply bg-primary;
   }
+
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+    @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl;
   }
+
+  .hover-pop {
+    @apply transition-all duration-300 hover:scale-105 active:scale-95;
+  }
+
   .handmade-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-secondary text-secondary-foreground shadow-sm;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -91,16 +122,17 @@
 
   /* Glassmorphism */
   .glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
   }
 
   .glass-dark {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
@@ -133,7 +165,7 @@
     bottom: 0;
     left: 0;
     transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
     animation: shimmer 2s infinite;
   }
 
@@ -149,7 +181,37 @@
 
   /* Smooth bounce */
   .bounce-smooth {
-    animation: bounceSm 2s ease-in-out infinite;
+    animation: bounceSm 2.5s ease-in-out infinite;
+  }
+
+  /* Soft Shadows */
+  .shadow-soft {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.3);
+  }
+
+  .shadow-glow-lg {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.4);
+  }
+
+  /* Cute Backgrounds */
+  .bg-lavender {
+    background-color: hsl(var(--lavender));
+  }
+
+  .bg-pink {
+    background-color: hsl(var(--soft-pink));
+  }
+
+  .bg-mint {
+    background-color: hsl(var(--mint));
+  }
+
+  .bg-sky {
+    background-color: hsl(var(--sky));
   }
 }
 
@@ -158,9 +220,11 @@
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -173,29 +237,38 @@
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-15px);
   }
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(237, 137, 107, 0.3);
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(237, 137, 107, 0.2);
   }
+
   50% {
-    box-shadow: 0 0 40px rgba(237, 137, 107, 0.6);
+    box-shadow: 0 0 30px rgba(237, 137, 107, 0.5);
   }
 }
 
 @keyframes bounceSm {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
 }
 
@@ -206,13 +279,14 @@ html {
 
 /* Enhanced transitions */
 * {
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Bouncy bezier */
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -220,11 +294,28 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
-  border-radius: 5px;
+  background: hsl(var(--primary) / 0.5);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.8);
+  background: hsl(var(--primary));
 }
 
+.bounce-cute {
+  animation: bounceCute 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounceCute {
+  0% {
+    transform: scale(0.9);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

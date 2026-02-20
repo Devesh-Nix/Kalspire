@@ -37,7 +37,7 @@ export function HomePage() {
   const handleToggleWishlist = (e: React.MouseEvent, productId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isInWishlist(productId)) {
       removeFromWishlist(productId);
       toast.success('Removed from wishlist');
@@ -50,15 +50,15 @@ export function HomePage() {
   const scrollCategories = (direction: 'left' | 'right') => {
     const element = categoriesScrollRef.current;
     if (!element) return;
-    
+
     // Use requestAnimationFrame to batch DOM reads and writes
     requestAnimationFrame(() => {
       const scrollAmount = 300;
       const currentScroll = element.scrollLeft;
-      const newScrollLeft = direction === 'left' 
+      const newScrollLeft = direction === 'left'
         ? currentScroll - scrollAmount
         : currentScroll + scrollAmount;
-      
+
       // Perform all writes in the next frame
       element.scrollTo({
         left: newScrollLeft,
@@ -95,18 +95,18 @@ export function HomePage() {
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
         </div>
-        
+
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(237,137,107,0.15),transparent_50%)] animate-pulse-slow"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(145,160,130,0.15),transparent_50%)] animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
-        
+
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center -mt-28">
+          <div className="max-w-4xl mx-auto text-center -mt-16">
             <Badge className=" -mt-12 mb-6 px-6 py-2.5 text-sm font-medium border-0 shadow-glow animate-fade-in-down bg-primary/15 text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300 cursor-pointer">
               <Sparkles className="h-4 w-4 mr-2 inline animate-pulse" />
               Handcrafted with Love
             </Badge>
-            
+
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight mb-8 font-serif text-foreground animate-fade-in-up">
               <span className="inline-block hover:scale-110 transition-transform duration-300">K</span>
               <span className="inline-block hover:scale-110 transition-transform duration-300" style={{ transitionDelay: '50ms' }}>a</span>
@@ -121,14 +121,14 @@ export function HomePage() {
               Artisan Crochet & Resin Creations
             </p>
             <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-              Discover unique, handmade treasures crafted with passion. Each piece tells a story of creativity, 
+              Discover unique, handmade treasures crafted with passion. Each piece tells a story of creativity,
               care, and artisan excellence.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '600ms' }}>
               <Link to={ROUTES.PRODUCTS}>
                 <Button size="lg" className="group gap-2 px-10 py-7 text-lg rounded-full shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:scale-105">
-                  Shop Crochet Collection 
+                  Shop Crochet Collection
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
@@ -147,8 +147,9 @@ export function HomePage() {
 
       {/* Categories Section - Enhanced with 3D Effects */}
       {!categoriesLoading && categories && categories.length > 0 && (
-        <section className="py-12 pt-24 bg-gradient-to-b from-white to-muted/20 overflow-x-hidden">
-          <div className="container mx-auto px-4">
+        <section className="py-12 pt-24 bg-gradient-to-b from-white to-pink/20 overflow-x-hidden relative">
+          <div className="absolute top-10 left-[-5%] w-64 h-64 bg-lavender/30 rounded-full blur-3xl animate-float" />
+          <div className="container mx-auto px-4 relative z-10">
             <div className="text-center mb-16 animate-fade-in-up">
               <h2 className="text-5xl font-bold mb-4 font-serif">Shop by Category</h2>
               <p className="text-muted-foreground text-xl">Explore our handcrafted collections</p>
@@ -252,8 +253,8 @@ export function HomePage() {
           ) : (
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {productsData?.products?.slice(0, 8).map((product, index) => (
-                <Card 
-                  key={product.id} 
+                <Card
+                  key={product.id}
                   className="group overflow-hidden border-0 shadow-soft hover:shadow-glow-lg transition-all duration-500 hover:-translate-y-2 bg-white backdrop-blur-sm animate-scale-in"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
@@ -274,7 +275,7 @@ export function HomePage() {
                           <ShoppingBag className="h-16 w-16 text-muted-foreground group-hover:scale-110 transition-transform duration-300" />
                         </div>
                       )}
-                      
+
                       {/* Enhanced Handmade Badge */}
                       <Badge className="absolute top-3 left-3 glass border-0 shadow-soft backdrop-blur-md group-hover:scale-110 transition-transform duration-300">
                         <Sparkles className="h-3 w-3 mr-1 animate-pulse" />
@@ -317,7 +318,7 @@ export function HomePage() {
                         ))}
                         <span className="text-xs text-muted-foreground ml-1 font-medium">(12)</span>
                       </div>
-                      
+
                       <h3 className="font-bold text-base line-clamp-1 hover:text-primary transition-colors mb-2 group-hover:scale-105 origin-left duration-300">
                         {product.name}
                       </h3>
@@ -403,17 +404,17 @@ export function HomePage() {
             <h2 className="text-5xl font-bold mb-4 font-serif">What Our Customers Say</h2>
             <p className="text-muted-foreground text-xl">Real reviews from happy customers</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <Card 
-                key={index} 
+              <Card
+                key={index}
                 className="border-0 shadow-soft hover:shadow-glow-lg transition-all duration-500 bg-white/80 backdrop-blur-sm hover:-translate-y-2 group animate-scale-in overflow-hidden relative"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
                 {/* Decorative gradient on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-secondary/0 group-hover:from-primary/5 group-hover:to-secondary/5 transition-all duration-500"></div>
-                
+
                 <CardContent className="p-8 relative z-10">
                   <Quote className="h-10 w-10 text-primary/30 mb-6 group-hover:scale-110 group-hover:text-primary/50 transition-all duration-300" />
                   <div className="flex gap-1 mb-6">
@@ -448,7 +449,7 @@ export function HomePage() {
               <span className="gradient-text">Resin Collection</span>
             </h2>
             <p className="text-xl text-muted-foreground mb-12 leading-relaxed animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-              Beautiful handcrafted resin keychains, coasters, and decorative pieces are on their way! 
+              Beautiful handcrafted resin keychains, coasters, and decorative pieces are on their way!
               Stay tuned for unique designs that blend art and functionality.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '400ms' }}>
