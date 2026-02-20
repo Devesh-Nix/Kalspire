@@ -9,7 +9,7 @@ import { productsApi } from '@/api/products';
 import { categoriesApi } from '@/api/categories';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
-import { formatCurrency, convertGoogleDriveUrl } from '@/lib/utils';
+import { formatCurrency, optimizeImageUrl } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
 import { toast } from 'sonner';
 import { useRef } from 'react';
@@ -147,7 +147,7 @@ export function HomePage() {
 
       {/* Categories Section - Enhanced with 3D Effects */}
       {!categoriesLoading && categories && categories.length > 0 && (
-        <section className="py-12 pt-24 bg-gradient-to-b from-white to-pink/20 overflow-x-hidden relative">
+        <section className="py-12 pt-24 bg-gradient-to-b from-white to-pink/20 overflow-x-hidden relative min-h-[500px]">
           <div className="absolute top-10 left-[-5%] w-64 h-64 bg-lavender/30 rounded-full blur-3xl animate-float" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center mb-16 animate-fade-in-up">
@@ -182,7 +182,7 @@ export function HomePage() {
                         {category.image ? (
                           <>
                             <img
-                              src={convertGoogleDriveUrl(category.image)}
+                              src={optimizeImageUrl(category.image, 400, 400)}
                               alt={category.name}
                               className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                               loading="lazy"
@@ -218,7 +218,7 @@ export function HomePage() {
       )}
 
       {/* Featured Products Section - Mesmerizing Cards */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-24 relative overflow-hidden min-h-[600px]">
         {/* Animated background */}
         <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-white to-muted/20"></div>
         <div className="absolute inset-0 opacity-30">
@@ -264,7 +264,7 @@ export function HomePage() {
                       {product.images?.[0] ? (
                         <>
                           <img
-                            src={convertGoogleDriveUrl(product.images[0])}
+                            src={optimizeImageUrl(product.images[0], 500, 500)}
                             alt={product.name}
                             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-2"
                             loading="lazy"

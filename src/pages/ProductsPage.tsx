@@ -11,7 +11,7 @@ import { productsApi } from '@/api/products';
 import { categoriesApi } from '@/api/categories';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
-import { formatCurrency, convertGoogleDriveUrl } from '@/lib/utils';
+import { formatCurrency, optimizeImageUrl } from '@/lib/utils';
 import { toast } from 'sonner';
 
 export function ProductsPage() {
@@ -298,7 +298,7 @@ export function ProductsPage() {
                           {product.images?.[0] ? (
                             <>
                               <img
-                                src={convertGoogleDriveUrl(product.images[0])}
+                                src={optimizeImageUrl(product.images[0], 500, 500)}
                                 alt={product.name}
                                 className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-3"
                                 loading="lazy"

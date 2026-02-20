@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { productsApi } from '@/api/products';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
-import { formatCurrency, convertGoogleDriveUrl } from '@/lib/utils';
+import { formatCurrency, optimizeImageUrl } from '@/lib/utils';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/constants';
 import type { ColorVariant } from '@/types';
@@ -118,7 +118,7 @@ export function ProductDetailPage() {
                   {images.length > 0 ? (
                     <>
                       <img
-                        src={convertGoogleDriveUrl(images[selectedImage])}
+                        src={optimizeImageUrl(images[selectedImage], 800, 800)}
                         alt={`${product.name} - View ${selectedImage + 1}`}
                         className="h-full w-full object-cover cursor-zoom-in transition-all duration-700 group-hover:scale-110 animate-fade-in"
                         onError={(e) => {
@@ -155,7 +155,7 @@ export function ProductDetailPage() {
                       aria-pressed={selectedImage === index}
                     >
                       <img
-                        src={convertGoogleDriveUrl(image)}
+                        src={optimizeImageUrl(image, 200, 200)}
                         alt={`${product.name} thumbnail ${index + 1}`}
                         className="h-full w-full object-cover"
                         loading="lazy"
