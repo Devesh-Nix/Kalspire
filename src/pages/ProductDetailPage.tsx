@@ -119,7 +119,7 @@ export function ProductDetailPage() {
                     <>
                       <img
                         src={convertGoogleDriveUrl(images[selectedImage])}
-                        alt={product.name}
+                        alt={`${product.name} - View ${selectedImage + 1}`}
                         className="h-full w-full object-cover cursor-zoom-in transition-all duration-700 group-hover:scale-110 animate-fade-in"
                         onError={(e) => {
                           console.error('Image failed to load:', images[selectedImage]);
@@ -151,11 +151,14 @@ export function ProductDetailPage() {
                         ? 'border-primary shadow-md scale-105'
                         : 'border-transparent hover:border-muted-foreground/30'
                         }`}
+                      aria-label={`View image ${index + 1}`}
+                      aria-pressed={selectedImage === index}
                     >
                       <img
                         src={convertGoogleDriveUrl(image)}
-                        alt={`${product.name} ${index + 1}`}
+                        alt={`${product.name} thumbnail ${index + 1}`}
                         className="h-full w-full object-cover"
+                        loading="lazy"
                         onError={(e) => {
                           console.error('Thumbnail failed to load:', image);
                           e.currentTarget.style.display = 'none';
@@ -249,6 +252,8 @@ export function ProductDetailPage() {
                               ? 'border-primary bg-primary/5 shadow-md'
                               : 'border-gray-200 hover:border-primary'
                               } ${color.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                            aria-label={`Select color ${color.name}`}
+                            aria-pressed={selectedColor?.id === color.id}
                           >
                             <div
                               className="h-6 w-6 rounded-full border-2 border-gray-300"
@@ -274,6 +279,7 @@ export function ProductDetailPage() {
                         className="rounded-none px-4 hover:bg-muted"
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
                         disabled={product.stock === 0}
+                        aria-label="Decrease quantity"
                       >
                         −
                       </Button>
@@ -284,6 +290,7 @@ export function ProductDetailPage() {
                         className="rounded-none px-4 hover:bg-muted"
                         onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
                         disabled={product.stock === 0}
+                        aria-label="Increase quantity"
                       >
                         +
                       </Button>

@@ -87,6 +87,7 @@ export function Header() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-12 pr-4 h-11 rounded-full border-border/50 focus:border-primary/50 glass hover:shadow-soft focus:shadow-glow transition-all duration-300"
+                  aria-label="Search products"
                 />
               </form>
             </div>
@@ -101,6 +102,7 @@ export function Header() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 pr-3 h-10 rounded-full border-border/50 focus:border-primary/50 text-sm glass hover:shadow-soft focus:shadow-glow transition-all duration-300"
+                  aria-label="Search products"
                 />
               </form>
             </div>
@@ -109,8 +111,8 @@ export function Header() {
             <nav className="flex items-center space-x-2 flex-shrink-0">
               {isAuthenticated ? (
                 <>
-                  <Link to={ROUTES.WISHLIST} className="relative group">
-                    <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300">
+                  <Link to={ROUTES.WISHLIST} className="relative group" aria-label="View Wishlist">
+                    <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300" aria-label={`Wishlist with ${wishlistCount} items`}>
                       <Heart className="h-5 w-5 group-hover:fill-primary group-hover:text-primary transition-all duration-300" />
                       {wishlistCount > 0 && (
                         <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary animate-pulse shadow-glow">
@@ -120,8 +122,8 @@ export function Header() {
                     </Button>
                   </Link>
 
-                  <Link to={ROUTES.CART} className="relative group">
-                    <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300">
+                  <Link to={ROUTES.CART} className="relative group" aria-label="View Shopping Cart">
+                    <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300" aria-label={`Shopping cart with ${totalItems} items`}>
                       <ShoppingCart className="h-5 w-5 group-hover:text-primary transition-colors duration-300" />
                       {totalItems > 0 && (
                         <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary animate-pulse shadow-glow">
@@ -132,16 +134,17 @@ export function Header() {
                   </Link>
 
                   <div className="flex items-center space-x-2 ml-2">
-                    <Link to={user?.role === 'admin' ? ROUTES.ADMIN.DASHBOARD : ROUTES.PROFILE}>
-                      <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300">
+                    <Link to={user?.role === 'admin' ? ROUTES.ADMIN.DASHBOARD : ROUTES.PROFILE} aria-label="View Profile">
+                      <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:scale-110 transition-all duration-300" aria-label="Profile">
                         <User className="h-5 w-5 hover:text-primary transition-colors duration-300" />
                       </Button>
                     </Link>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleLogout} 
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleLogout}
                       className="rounded-full hidden sm:inline-flex hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all duration-300 hover:scale-105"
+                      aria-label="Logout"
                     >
                       Logout
                     </Button>
@@ -150,12 +153,12 @@ export function Header() {
               ) : (
                 <div className="flex items-center space-x-2">
                   <Link to={ROUTES.LOGIN}>
-                    <Button variant="ghost" size="sm" className="rounded-full hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-105">
+                    <Button variant="ghost" size="sm" className="rounded-full hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-105" aria-label="Login">
                       Login
                     </Button>
                   </Link>
                   <Link to={ROUTES.REGISTER}>
-                    <Button size="sm" className="rounded-full shadow-soft hover:shadow-glow transition-all duration-300 hover:scale-105">
+                    <Button size="sm" className="rounded-full shadow-soft hover:shadow-glow transition-all duration-300 hover:scale-105" aria-label="Sign Up">
                       Sign Up
                     </Button>
                   </Link>

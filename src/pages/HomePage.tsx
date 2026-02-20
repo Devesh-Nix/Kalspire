@@ -133,7 +133,7 @@ export function HomePage() {
                 </Button>
               </Link>
               <Link to={ROUTES.PRODUCTS}>
-                <Button size="lg" variant="outline" className="gap-2 px-10 py-7 text-lg rounded-full border-2 hover:border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105">
+                <Button size="lg" variant="outline" className="gap-2 px-10 py-7 text-lg rounded-full border-2 hover:border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105" aria-label="Explore all products">
                   Explore All Products
                 </Button>
               </Link>
@@ -159,7 +159,7 @@ export function HomePage() {
               <button
                 onClick={() => scrollCategories('left')}
                 className="absolute left-0 top-1/2 -translate-y-1/2 z-10 glass rounded-full p-4 shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:bg-primary hover:text-white hover:scale-110 -ml-4 md:-ml-6"
-                aria-label="Scroll left"
+                aria-label="Scroll categories left"
               >
                 <ChevronLeft className="h-6 w-6" />
               </button>
@@ -185,6 +185,7 @@ export function HomePage() {
                               src={convertGoogleDriveUrl(category.image)}
                               alt={category.name}
                               className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
+                              loading="lazy"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           </>
@@ -207,7 +208,7 @@ export function HomePage() {
               <button
                 onClick={() => scrollCategories('right')}
                 className="absolute right-0 top-1/2 -translate-y-1/2 z-10 glass rounded-full p-4 shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:bg-primary hover:text-white hover:scale-110 -mr-4 md:-mr-6"
-                aria-label="Scroll right"
+                aria-label="Scroll categories right"
               >
                 <ChevronRight className="h-6 w-6" />
               </button>
@@ -266,6 +267,7 @@ export function HomePage() {
                             src={convertGoogleDriveUrl(product.images[0])}
                             alt={product.name}
                             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-2"
+                            loading="lazy"
                           />
                           {/* Gradient overlay on hover */}
                           <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -288,6 +290,7 @@ export function HomePage() {
                         size="icon"
                         className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-glow rounded-full h-10 w-10 hover:scale-110"
                         onClick={(e) => handleToggleWishlist(e, product.id)}
+                        aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                       >
                         <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-current animate-pulse' : ''}`} />
                       </Button>
@@ -453,7 +456,7 @@ export function HomePage() {
               Stay tuned for unique designs that blend art and functionality.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-              <a href="https://www.instagram.com/_kalspire_/" target="_blank" rel="noreferrer">
+              <a href="https://www.instagram.com/_kalspire_/" target="_blank" rel="noreferrer" aria-label="Follow us on Instagram">
                 <Button size="lg" variant="outline" className="group gap-3 rounded-full border-2 hover:border-accent hover:bg-accent/10 hover:scale-105 transition-all duration-300 px-10 py-7 text-lg shadow-soft hover:shadow-glow">
                   <Instagram className="h-6 w-6 group-hover:rotate-12 transition-transform duration-300" />
                   Follow on Instagram for Updates

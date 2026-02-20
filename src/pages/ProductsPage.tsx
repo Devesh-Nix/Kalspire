@@ -26,11 +26,11 @@ export function ProductsPage() {
   const sort = sortParam || undefined;
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
-  
+
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
 
-  const { 
+  const {
     data,
     fetchNextPage,
     hasNextPage,
@@ -38,7 +38,7 @@ export function ProductsPage() {
     isLoading,
   } = useInfiniteQuery({
     queryKey: ['products', categoryId, searchQuery, priceMin, priceMax, sort],
-    queryFn: ({ pageParam = 1 }) => productsApi.getAll({ 
+    queryFn: ({ pageParam = 1 }) => productsApi.getAll({
       categoryId: categoryId || undefined,
       search: searchQuery || undefined,
       priceMin,
@@ -141,7 +141,7 @@ export function ProductsPage() {
   const handleToggleWishlist = (e: React.MouseEvent, productId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isInWishlist(productId)) {
       removeFromWishlist(productId);
       toast.success('Removed from wishlist');
@@ -221,6 +221,7 @@ export function ProductsPage() {
                               const clampedMin = Math.min(newMin, priceMax ?? 10000);
                               handlePriceChange(clampedMin, priceMax);
                             }}
+                            aria-label="Minimum price"
                           />
                           <input
                             type="range"
@@ -234,6 +235,7 @@ export function ProductsPage() {
                               const clampedMax = Math.max(newMax, priceMin ?? 0);
                               handlePriceChange(priceMin, clampedMax);
                             }}
+                            aria-label="Maximum price"
                           />
                         </div>
                       </div>
@@ -290,92 +292,94 @@ export function ProductsPage() {
               <>
                 <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {productsData.map((product, index) => (
-                  <Card key={product.id} className="group overflow-hidden border-0 shadow-soft hover:shadow-glow-lg transition-all duration-500 hover:-translate-y-3 bg-white backdrop-blur-sm animate-scale-in hover:rotate-1" style={{ animationDelay: `${(index % 9) * 80}ms` }}>
-                    <Link to={`/products/${product.id}`}>
-                      <div className="aspect-square overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10 relative">
-                        {product.images?.[0] ? (
-                          <>
-                          <img
-                            src={convertGoogleDriveUrl(product.images[0])}
-                            alt={product.name}
-                            className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-3"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                          </>
-                        ) : (
-                          <div className="h-full w-full flex items-center justify-center">
-                            <ShoppingBag className="h-16 w-16 text-muted-foreground" />
-                          </div>
-                        )}
-                        
-                        {/* Enhanced Handmade Badge */}
-                        <Badge className="absolute top-3 left-3 glass border-0 shadow-soft backdrop-blur-md group-hover:scale-110 transition-transform duration-300">
-                          <Sparkles className="h-3 w-3 mr-1 animate-pulse" />
-                          Handmade
-                        </Badge>
-
-                        {/* Enhanced Wishlist Button */}
-                        <Button
-                          variant={isInWishlist(product.id) ? "default" : "secondary"}
-                          size="icon"
-                          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-glow rounded-full h-10 w-10 hover:scale-110"
-                          onClick={(e) => handleToggleWishlist(e, product.id)}
-                        >
-                          <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-current animate-pulse' : ''}`} />
-                        </Button>
-
-                        {/* Enhanced Quick Add Overlay */}
-                        <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                          <Button
-                            className="w-full rounded-full"
-                            size="sm"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleAddToCart(product);
-                            }}
-                            disabled={product.stock === 0}
-                          >
-                            <ShoppingBag className="h-4 w-4 mr-2" />
-                            Quick Add
-                          </Button>
-                        </div>
-                      </div>
-                    </Link>
-                    <CardContent className="p-4">
+                    <Card key={product.id} className="group overflow-hidden border-0 shadow-soft hover:shadow-glow-lg transition-all duration-500 hover:-translate-y-3 bg-white backdrop-blur-sm animate-scale-in hover:rotate-1" style={{ animationDelay: `${(index % 9) * 80}ms` }}>
                       <Link to={`/products/${product.id}`}>
-                        {/* Enhanced Rating Stars */}
-                        <div className="flex items-center gap-1 mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-3.5 w-3.5 fill-primary text-primary group-hover:scale-110 transition-transform" style={{ transitionDelay: `${i * 50}ms` }} />
-                          ))}
-                          <span className="text-xs text-muted-foreground ml-1 font-medium">(12)</span>
-                        </div>
-                        
-                        <h3 className="font-bold text-base line-clamp-1 hover:text-primary transition-colors mb-2 group-hover:scale-105 origin-left duration-300">
-                          {product.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
-                          {product.description}
-                        </p>
-                      </Link>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-xl font-bold text-primary group-hover:scale-110 inline-block transition-transform">{formatCurrency(product.price)}</span>
-                          {product.originalPrice && (
-                            <span className="ml-2 text-sm text-muted-foreground line-through">
-                              {formatCurrency(product.originalPrice)}
-                            </span>
+                        <div className="aspect-square overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10 relative">
+                          {product.images?.[0] ? (
+                            <>
+                              <img
+                                src={convertGoogleDriveUrl(product.images[0])}
+                                alt={product.name}
+                                className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-3"
+                                loading="lazy"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </>
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center">
+                              <ShoppingBag className="h-16 w-16 text-muted-foreground" />
+                            </div>
                           )}
+
+                          {/* Enhanced Handmade Badge */}
+                          <Badge className="absolute top-3 left-3 glass border-0 shadow-soft backdrop-blur-md group-hover:scale-110 transition-transform duration-300">
+                            <Sparkles className="h-3 w-3 mr-1 animate-pulse" />
+                            Handmade
+                          </Badge>
+
+                          {/* Enhanced Wishlist Button */}
+                          <Button
+                            variant={isInWishlist(product.id) ? "default" : "secondary"}
+                            size="icon"
+                            className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-glow rounded-full h-10 w-10 hover:scale-110"
+                            onClick={(e) => handleToggleWishlist(e, product.id)}
+                          >
+                            <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-current animate-pulse' : ''}`} />
+                          </Button>
+
+                          {/* Enhanced Quick Add Overlay */}
+                          <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                            <Button
+                              className="w-full rounded-full"
+                              size="sm"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleAddToCart(product);
+                              }}
+                              disabled={product.stock === 0}
+                              aria-label={`Add ${product.name} to cart`}
+                            >
+                              <ShoppingBag className="h-4 w-4 mr-2" />
+                              Quick Add
+                            </Button>
+                          </div>
                         </div>
-                        {product.stock === 0 ? (
-                          <Badge variant="destructive" className="text-xs animate-pulse">Out of Stock</Badge>
-                        ) : product.stock < 10 ? (
-                          <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px ml-1 animate-pulse">Only {product.stock} left</Badge>
-                        ) : null}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </Link>
+                      <CardContent className="p-4">
+                        <Link to={`/products/${product.id}`}>
+                          {/* Enhanced Rating Stars */}
+                          <div className="flex items-center gap-1 mb-2">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="h-3.5 w-3.5 fill-primary text-primary group-hover:scale-110 transition-transform" style={{ transitionDelay: `${i * 50}ms` }} />
+                            ))}
+                            <span className="text-xs text-muted-foreground ml-1 font-medium">(12)</span>
+                          </div>
+
+                          <h3 className="font-bold text-base line-clamp-1 hover:text-primary transition-colors mb-2 group-hover:scale-105 origin-left duration-300">
+                            {product.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+                            {product.description}
+                          </p>
+                        </Link>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-xl font-bold text-primary group-hover:scale-110 inline-block transition-transform">{formatCurrency(product.price)}</span>
+                            {product.originalPrice && (
+                              <span className="ml-2 text-sm text-muted-foreground line-through">
+                                {formatCurrency(product.originalPrice)}
+                              </span>
+                            )}
+                          </div>
+                          {product.stock === 0 ? (
+                            <Badge variant="destructive" className="text-xs animate-pulse">Out of Stock</Badge>
+                          ) : product.stock < 10 ? (
+                            <Badge variant="secondary" className="text-[10px] leading-none whitespace-nowrap rounded-md px-1.5 py-px ml-1 animate-pulse">Only {product.stock} left</Badge>
+                          ) : null}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
 
                 {/* Infinite Scroll Trigger & Loading Indicator */}
